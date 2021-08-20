@@ -17,6 +17,7 @@
     "execute": "chmod +x src/pushy.js"
   },
   "dependencies": {
+    "cosmiconfig": "^7.0.0",
     "execa": "^5.1.1",
     "node-emoji": "^1.11.0"
   }
