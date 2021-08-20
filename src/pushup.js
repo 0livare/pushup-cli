@@ -13,10 +13,10 @@ const defaultConfig = {
 
 async function main() {
   if (process.argv.length < 3) {
-    error('You must provide ticket number, for example:\n\n\tpushy 444')
+    error('You must provide ticket number, for example:\n\n\tpushup 444')
   }
 
-  const explorer = cosmiconfigSync('pushy')
+  const explorer = cosmiconfigSync('pushup')
   let {config} = explorer.search()
 
   config = {

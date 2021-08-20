@@ -1,20 +1,20 @@
 {
-  "name": "pushy",
+  "name": "pushup-cli",
   "version": "0.0.1",
-  "description": "Push a remote git branch based on a ticket number",
+  "description": "Automatically push remote git branches that follow your team's standard.",
   "author": "Zach Posten <https://github.com/zposten>",
   "license": "MIT",
   "private": false,
   "files": [
     "src/**/*.js"
   ],
-  "main": "src/pushy.js",
+  "main": "src/pushup.js",
   "bin": {
-    "pushy": "src/pushy.js"
+    "pushup": "src/pushup.js"
   },
   "scripts": {
-    "start": "node src/pushy.js",
-    "execute": "chmod +x src/pushy.js"
+    "start": "node src/pushup.js",
+    "execute": "chmod +x src/pushup.js"
   },
   "dependencies": {
     "cosmiconfig": "^7.0.0",
