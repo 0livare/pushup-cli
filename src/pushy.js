@@ -5,10 +5,10 @@ const emoji = require('node-emoji')
 const {cosmiconfigSync} = require('cosmiconfig')
 
 const defaultConfig = {
-  ticketPrefix: null,
-  ticketDivider: '-',
+  ticketPrefix: '',
+  divider: '-',
   gitRemote: 'origin',
-  developerInitials: null,
+  format: 'TICKET-BRANCH',
 }
 
 async function main() {
@@ -24,7 +24,7 @@ async function main() {
     ...config,
   }
 
-  const {ticketPrefix, ticketDivider, gitRemote, developerInitials} = config
+  const {ticketPrefix, gitRemote, format} = config
 
   const ticketId = process.argv[2]
 
@@ -34,22 +34,18 @@ async function main() {
   }
 
   const ticketNumber =
-    !ticketPrefix || ticketId.includes(ticketPrefix)
-      ? ticketId
-      : `${ticketPrefix}${ticketDivider}${ticketId}`
+    ticketPrefix && !ticketIdContainsPrefix
+      ? `${ticketPrefix}${ticketId}`
+      : ticketId
 
   const {stdout: localBranchName} = await execa('git', [
     'branch',
     '--show-current',
   ])
 
-  const remoteBranchName = [
-    ticketNumber,
-    ticketDivider,
-    developerInitials,
-    ticketDivider,
-    localBranchName,
-  ].join('')
+  const remoteBranchName = format
+    .replace('TICKET', ticketNumber)
+    .replace('BRANCH', localBranchName)
 
   try {
     await execa(
