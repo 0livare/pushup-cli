@@ -38,8 +38,11 @@ And then create a [configuration file](#configuration-file).
 Now pushing a remote branch is as simple as
 
 ```bash
-git checkout -b myBranch
-pushup 123 # Where 123 is your ticket number
+➜  git checkout -b myBranch
+Switched to a new branch 'myBranch'
+
+➜  pushup 123 # Where 123 is your ticket number
+Branch 'myBranch' set up to track remote branch 'zp-NVM-123-myBranch' from 'origin'.
 ```
 
 ## Configuration File
@@ -53,6 +56,10 @@ pushup uses [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) for conf
 - A `.pushuprc.json`, `.pushuprc.yml`, `.pushuprc.yaml`, or `.pushuprc.json5` file.
 - A `.pushuprc.js`, `.pushuprc.cjs`, `pushup.config.js`, or `pushup.config.cjs` file that exports an object using `module.exports`.
 - A `.pushuprc.toml` file.
+
+You can place your config file directly in your project so that your whole team can take advantage of it, or in your home directory for your personal use.
+
+Placing the config directly in the project is nice because that allows customizing the ticket prefix on a per-project basis.
 
 ### Config file contents
 
