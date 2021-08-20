@@ -1,0 +1,6 @@
+{
+  "ticketPrefix": "FOO",
+  "ticketDivider": "-",
+  "gitRemote": "origin",
+  "developerInitials": "zp"
+}

@@ -1,0 +1,23 @@
+{
+  "name": "pushy",
+  "version": "0.0.1",
+  "description": "Push a remote git branch based on a ticket number",
+  "author": "Zach Posten <https://github.com/zposten>",
+  "license": "MIT",
+  "private": false,
+  "files": [
+    "src/**/*.js"
+  ],
+  "main": "src/pushy.js",
+  "bin": {
+    "pushy": "src/pushy.js"
+  },
+  "scripts": {
+    "start": "node src/pushy.js",
+    "execute": "chmod +x src/pushy.js"
+  },
+  "dependencies": {
+    "execa": "^5.1.1",
+    "node-emoji": "^1.11.0"
+  }
+}
