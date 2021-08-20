@@ -1,0 +1,5 @@
+{
+  "format": "TICKET-zp-BRANCH",
+  "ticketPrefix": "ZACH-",
+  "gitRemote": "origin"
+}

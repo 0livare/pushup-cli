@@ -1,6 +1,6 @@
 {
   "name": "pushup-cli",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Automatically push remote git branches that follow your team's standard.",
   "author": "Zach Posten <https://github.com/zposten>",
   "license": "MIT",
@@ -8,15 +8,16 @@
   "files": [
     "src/**/*.js"
   ],
-  "main": "src/pushup.js",
+  "main": "src/cli.js",
   "bin": {
-    "pushup": "src/pushup.js"
+    "pushup": "src/cli.js"
   },
   "scripts": {
-    "start": "node src/pushup.js",
-    "execute": "chmod +x src/pushup.js"
+    "start": "node src/cli.js",
+    "execute": "chmod +x src/cli.js"
   },
   "dependencies": {
+    "commander": "^8.1.0",
     "cosmiconfig": "^7.0.0",
     "execa": "^5.1.1",
     "node-emoji": "^1.11.0"

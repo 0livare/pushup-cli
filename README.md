@@ -12,10 +12,10 @@ MLD-419-add-graphql-support # Where MLD-419 is a ticket number
 zp-NVM-8907-supportAdditionalProviders
 ```
 
-To follow this standard, devs will often create a local branch in that format and then just push it up like normal. But as you've probably found (if you've made your way to this page), that method has some drawbacks.
+To follow this standard, devs will often create a local branch in that format and then just push it up like normal. But as you've probably found (if you've made your way here), that method has some drawbacks:
 
 - It's super repetitive
-- For some reason it's always harder than it should be to remember the damn format
+- For some reason it's always harder than it should be to remember the damn format you're supposed to use
 - Your branch names become so long and a pain to type
 - Even terminal auto-complete can't help very much because the repetitive part of the branch name tends to be at the beginning, and for auto-complete to work you at least have to type it out until you get to a unique portion of the branch name.
 
@@ -49,23 +49,17 @@ Branch 'myBranch' set up to track remote branch 'zp-NVM-123-myBranch' from 'orig
 
 ### Config file location
 
-pushup uses [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) for configuration file support. This means you can configure pushup via (in order of precedence):
-
-- A `"pushup"` key in your `package.json` file.
-- A `.pushuprc` file written in JSON or YAML.
-- A `.pushuprc.json`, `.pushuprc.yml`, `.pushuprc.yaml`, or `.pushuprc.json5` file.
-- A `.pushuprc.js`, `.pushuprc.cjs`, `pushup.config.js`, or `pushup.config.cjs` file that exports an object using `module.exports`.
-- A `.pushuprc.toml` file.
+pushup uses [cosmiconfig](https://github.com/davidtheclark/cosmiconfig#cosmiconfig) for configuration file support. This means you can configure pushup via [any standard configuration method](https://github.com/davidtheclark/cosmiconfig#cosmiconfig).
 
 You can place your config file directly in your project so that your whole team can take advantage of it, or in your home directory for your personal use.
 
-Placing the config directly in the project is nice because that allows customizing the ticket prefix on a per-project basis.
+Placing the config directly in the project is nice because that allows customizing the ticket prefix on a per-project basis. You can also customize config options via the [CLI options](#CLI-Options).
 
 ### Config file contents
 
 Your configuration file may contain the following keys:
 
-- `format` (default: `TICKET-BRANCH`) - The format of the remote branch to be pushed. Can optionally accept certain placeholders that will be replaced with calculated values. All text that does not match a placeholder will not be modified and will become part of the remote branch name.
+- `format` _(default: `TICKET-BRANCH`)_ - The format of the remote branch name to be pushed. It can optionally accept certain placeholders that will be replaced with calculated values. All text that does not match a placeholder will not be modified and will become part of the remote branch name.
 
   The currently supported placeholders are:
 
@@ -80,13 +74,25 @@ Your configuration file may contain the following keys:
   zp-TICKET-BRANCH
   ```
 
-- `ticketPrefix` (default: `""`) - The alphabetic prefix that should be appended to ticket ID's. For example, if this is set to `FOO-`, the command `pushup 44` will result in BRANCH (one of the `format` placeholders) being equal to `FOO-44`.
+- `ticketPrefix` _(default: `""`)_ - The alphabetic prefix that should be appended to ticket IDs. For example, if this is set to `FOO-`, the command `pushup 44` will result in BRANCH (one of the `format` placeholders) being equal to `FOO-44`.
 
   If you want the alphabetic portion of the ticket number to be separated from the numeric portion, your `ticketPrefix` must end with that divider, for example a dash `-` as shown in the previous example.
 
   This prefix can also be supplied directly to the `pushup` command: `pushup BAR-123`. Doing so will cause `ticketPrefix` to be ignored.
 
-- `gitRemote` (default: `origin`) - The name of the git remote that should be pushed to.
+- `gitRemote` _(default: `origin`)_ - The name of the git remote that should be pushed to.
+
+## CLI Options
+
+As stated above, the simplest usage of the CLI is just `pushup 44`, where `44` is your ticket identifier. This wil be combined with either your configuration file or the default options to publish a remote branch.
+
+All configuration options also have an identically named CLI flag. If both are present, the CLI flag will take precedence. Please see the [config file contents](#config-file-contents) section for more information about each option.
+
+- `--format`, `-f`
+- `--ticketPrefix`, `-p`
+- `--gitRemote`, `-r`
+
+Finally, you prefer passing flags to positional arguments because they're better labeled, there are also the `--ticket` or `-t` flags to pass the ticket identifier.
 
 ## Running locally
 
