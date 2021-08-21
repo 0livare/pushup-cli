@@ -14,12 +14,16 @@
   },
   "scripts": {
     "start": "node src/cli.js",
-    "execute": "chmod +x src/cli.js"
+    "execute": "chmod +x src/cli.js",
+    "test": "jest"
   },
   "dependencies": {
     "commander": "^8.1.0",
     "cosmiconfig": "^7.0.0",
     "execa": "^5.1.1",
     "node-emoji": "^1.11.0"
+  },
+  "devDependencies": {
+    "jest": "^27.0.6"
   }
 }
