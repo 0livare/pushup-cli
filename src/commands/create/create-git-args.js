@@ -1,7 +1,13 @@
+const {getCurrentBranchName} = require('../../util')
 const createBranchName = require('./create-branch-name')
 
-function createGitArgs({ticketId, format, ticketPrefix, gitRemote}) {
-  const remoteBranchName = createBranchName({ticketId, format, ticketPrefix})
+async function createGitArgs({ticketId, format, ticketPrefix, gitRemote}) {
+  const localBranchName = await getCurrentBranchName()
+  const remoteBranchName = await createBranchName({
+    ticketId,
+    format,
+    ticketPrefix,
+  })
   return ['push', gitRemote, '-u', `${localBranchName}:${remoteBranchName}`]
 }
 

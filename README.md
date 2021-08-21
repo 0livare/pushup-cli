@@ -82,7 +82,13 @@ Your configuration file may contain the following keys:
 
 - `gitRemote` _(default: `origin`)_ - The name of the git remote that should be pushed to.
 
-## CLI Options
+## CLI Commands
+
+### `pushup create [ticket]`
+
+> This is the default command, and is identical to just running `pushup [ticket]`.
+
+Automatically create remote git branches that follow your team's standard.
 
 As stated above, the simplest usage of the CLI is just `pushup 44`, where `44` is your ticket identifier. This wil be combined with either your configuration file or the default options to publish a remote branch.
 
@@ -95,6 +101,12 @@ All configuration options also have an identically named CLI flag. If both are p
 Finally, you prefer passing flags to positional arguments because they're better labeled, there are also the `--ticket` or `-t` flags to pass the ticket identifier.
 
 Any unknown options will be passed along to `git`.
+
+### `pushup delete [ticket]`
+
+Automatically delete the remote git branch corresponding to a particular ticket number.
+
+Supports exactly the same options as the `create` command.
 
 ## Running locally
 

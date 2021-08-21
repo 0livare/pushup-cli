@@ -1,6 +1,6 @@
 {
   "name": "pushup-cli",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Automatically push remote git branches that follow your team's standard.",
   "author": "Zach Posten <https://github.com/zposten>",
   "license": "MIT",
@@ -21,6 +21,7 @@
     "commander": "^8.1.0",
     "cosmiconfig": "^7.0.0",
     "execa": "^5.1.1",
+    "inquirer": "^8.1.2",
     "node-emoji": "^1.11.0"
   },
   "devDependencies": {
