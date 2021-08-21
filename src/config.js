@@ -2,7 +2,6 @@ const {cosmiconfigSync} = require('cosmiconfig')
 
 const defaultConfig = {
   ticketPrefix: '',
-  divider: '-',
   gitRemote: 'origin',
   format: 'TICKET-BRANCH',
 }
