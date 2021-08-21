@@ -6,14 +6,14 @@ const package = require('../package.json')
 cli
   .command('create', {isDefault: true})
   .description(
-    "Automatically create remote git branches that follow your team's standard.",
+    "Automatically create remote git branches that follow your team's standard",
   )
   .action(require('./commands/create'))
   .argument('[ticket]', 'A ticket identifier')
   .option('-t, --ticket <ticket>', 'A ticket identifier')
   .option(
     '--format <format>',
-    'The format of the remote branch name to be created',
+    'The format of the name of the remote branch name to be created',
   )
   .option(
     '-p, --ticketPrefix <ticketPrefix>',
@@ -33,6 +33,10 @@ cli
   .action(require('./commands/delete'))
   .argument('[ticket]', 'A ticket identifier')
   .option('-t, --ticket <ticket>', 'A ticket identifier')
+  .option(
+    '--format <format>',
+    'The format of the name of the remote branch name to be deleted',
+  )
   .option(
     '-p, --ticketPrefix <ticketPrefix>',
     'The alphabetic prefix that should be appended to ticket IDs',
