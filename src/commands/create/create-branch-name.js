@@ -1,35 +1,7 @@
 const execa = require('execa')
-const {cosmiconfigSync} = require('cosmiconfig')
-const chalk = require('chalk')
+const {warn} = require('../../util')
 
-const {error, warn} = require('../util')
-
-const defaultConfig = {
-  ticketPrefix: '',
-  divider: '-',
-  gitRemote: 'origin',
-  format: 'TICKET-BRANCH',
-}
-
-async function push(ticketId, options, commander) {
-  const explorer = cosmiconfigSync('pushup')
-  let {config} = explorer.search()
-
-  config = {
-    ...defaultConfig,
-    ...config,
-  }
-
-  ticketId = options.ticket ?? ticketId
-  const format = options.format ?? config.format
-  const ticketPrefix = options.ticketPrefix ?? config.ticketPrefix
-  const gitRemote = options.gitRemote ?? config.gitRemote
-
-  // Commander.args contains positional arguments and
-  // any unknown options because they're not interpreted
-  // as options
-  const unknownOptions = commander.args.filter(arg => arg.startsWith('-'))
-
+async function createBranchName({ticketId, format, ticketPrefix}) {
   const ticketIdContainsPrefix = ticketId && ticketId.match(/^[a-zA-Z]/)
   if (!ticketIdContainsPrefix && !ticketPrefix) {
     warn('No ticket prefix was found, only the ticket ID will be used')
@@ -68,21 +40,7 @@ async function push(ticketId, options, commander) {
     remoteBranchName = remoteBranchName.slice(0, -1)
   }
 
-  try {
-    const gitArgs = [
-      'push',
-      gitRemote,
-      '-u',
-      `${localBranchName}:${remoteBranchName}`,
-      ...unknownOptions,
-    ]
-
-    console.log(chalk.gray(`$ git ${gitArgs.join(' ')}`))
-
-    await execa('git', gitArgs, {stdio: 'inherit'})
-  } catch (e) {
-    // Do nothing here, git's error message will be displayed
-  }
+  return remoteBranchName
 }
 
-module.exports = push
+module.exports = createBranchName

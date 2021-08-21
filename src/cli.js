@@ -8,7 +8,7 @@ cli
   .description(
     "Automatically create remote git branches that follow your team's standard.",
   )
-  .action(require('./commands/create'))
+  .action(require('./commands/create/create'))
   .argument('[ticket]', 'A ticket identifier')
   .option('-t, --ticket <ticket>', 'A ticket identifier')
   .option(
