@@ -4,16 +4,16 @@ const cli = require('commander')
 const package = require('../package.json')
 
 cli
-  .command('push', {isDefault: true})
+  .command('create', {isDefault: true})
   .description(
-    "Automatically push remote git branches that follow your team's standard.",
+    "Automatically create remote git branches that follow your team's standard.",
   )
-  .action(require('./commands/push'))
+  .action(require('./commands/create/create'))
   .argument('[ticket]', 'A ticket identifier')
   .option('-t, --ticket <ticket>', 'A ticket identifier')
   .option(
     '--format <format>',
-    'The format of the remote branch name to be pushed',
+    'The format of the remote branch name to be created',
   )
   .option(
     '-p, --ticketPrefix <ticketPrefix>',
