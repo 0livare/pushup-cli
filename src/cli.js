@@ -12,7 +12,7 @@ cli
   .argument('[ticket]', 'A ticket identifier')
   .option('-t, --ticket <ticket>', 'A ticket identifier')
   .option(
-    '-f, --format <format>',
+    '--format <format>',
     'The format of the remote branch name to be pushed',
   )
   .option(
@@ -23,5 +23,6 @@ cli
     '-r, --gitRemote <gitRemote>',
     'The git remote that a branch should be pushed to',
   )
+  .allowUnknownOption()
 
 cli.version(package.version).parse(process.argv)

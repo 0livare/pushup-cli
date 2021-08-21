@@ -88,11 +88,13 @@ As stated above, the simplest usage of the CLI is just `pushup 44`, where `44` i
 
 All configuration options also have an identically named CLI flag. If both are present, the CLI flag will take precedence. Please see the [config file contents](#config-file-contents) section for more information about each option.
 
-- `--format`, `-f`
+- `--format`
 - `--ticketPrefix`, `-p`
 - `--gitRemote`, `-r`
 
 Finally, you prefer passing flags to positional arguments because they're better labeled, there are also the `--ticket` or `-t` flags to pass the ticket identifier.
+
+Any unknown options will be passed along to `git`.
 
 ## Running locally
 

@@ -1,5 +1,6 @@
 const execa = require('execa')
 const {cosmiconfigSync} = require('cosmiconfig')
+const chalk = require('chalk')
 
 const {error, warn} = require('../util')
 
@@ -21,8 +22,13 @@ async function push(ticketId, options, commander) {
 
   ticketId = options.ticket ?? ticketId
   const format = options.format ?? config.format
-  const gitRemote = options.gitRemote ?? config.gitRemote
   const ticketPrefix = options.ticketPrefix ?? config.ticketPrefix
+  const gitRemote = options.gitRemote ?? config.gitRemote
+
+  // Commander.args contains positional arguments and
+  // any unknown options because they're not interpreted
+  // as options
+  const unknownOptions = commander.args.filter(arg => arg.startsWith('-'))
 
   const ticketIdContainsPrefix = ticketId && ticketId.match(/^[a-zA-Z]/)
   if (!ticketIdContainsPrefix && !ticketPrefix) {
@@ -63,11 +69,17 @@ async function push(ticketId, options, commander) {
   }
 
   try {
-    await execa(
-      'git',
-      ['push', gitRemote, '-u', `${localBranchName}:${remoteBranchName}`],
-      {stdio: 'inherit'},
-    )
+    const gitArgs = [
+      'push',
+      gitRemote,
+      '-u',
+      `${localBranchName}:${remoteBranchName}`,
+      ...unknownOptions,
+    ]
+
+    console.log(chalk.gray(`$ git ${gitArgs.join(' ')}`))
+
+    await execa('git', gitArgs, {stdio: 'inherit'})
   } catch (e) {
     // Do nothing here, git's error message will be displayed
   }
