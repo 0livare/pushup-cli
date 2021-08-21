@@ -30,16 +30,8 @@ async function createBranchName({ticketId, format, ticketPrefix}) {
   // would always be undesirable.
   //
   // These conditionals strip off those extra characters if they exist.
-  const branchStartsWithDivider = remoteBranchName.match(/^[^a-zA-Z0-9]/)
-  const branchEndsWithDivider = remoteBranchName.match(/[^a-zA-Z0-9]$/)
-
-  if (branchStartsWithDivider) {
-    remoteBranchName = remoteBranchName.slice(1)
-  }
-  if (branchEndsWithDivider) {
-    remoteBranchName = remoteBranchName.slice(0, -1)
-  }
-
+  remoteBranchName = remoteBranchName.replace(/^[^a-zA-Z0-9]+/, '')
+  remoteBranchName = remoteBranchName.replace(/[^a-zA-Z0-9]+$/, '')
   return remoteBranchName
 }
 
