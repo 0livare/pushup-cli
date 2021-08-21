@@ -110,8 +110,10 @@ Supports exactly the same options as the `create` command.
 
 ## Running locally
 
-1. Create a configuration file (as described [above](#configuration-file))
-1. Install dependencies with `yarn install`
-1. Allow running `pushup`in the terminal to run this project `yarn link`
-1. Run `pushup` in your terminal. You should get an error telling you to supply a ticket ID.
-   1. If you get "permission denied" when running the `pushup` command, run `yarn execute` and try again.
+1. Clone the repo
+1. Create a [configuration file](#configuration-file)
+1. Install dependencies with: `yarn install`
+1. Allow running `pushup` in the terminal to run invoke project: `npm link`
+   - _Yarn's link command does not respect the `bin` field in the package.json currently_
+1. Run `pushup 123` in your terminal inside of a git repo. A remote branch should have been created!
+   1. If you get "permission denied" when running the `pushup` command, run `yarn execute` inside this project and then try again
