@@ -1,24 +1,8 @@
-const execa = require('execa')
-const {warn} = require('../../util')
+const {getCurrentBranchName, determineTicketNumber} = require('../../util')
 
 async function createBranchName({ticketId, format, ticketPrefix}) {
-  const ticketIdContainsPrefix = ticketId && ticketId.match(/^[a-zA-Z]/)
-  if (!ticketIdContainsPrefix && !ticketPrefix) {
-    warn('No ticket prefix was found, only the ticket ID will be used')
-  }
-
-  const ticketNumber = ticketIdContainsPrefix
-    ? ticketId
-    : ticketPrefix && ticketId
-    ? `${ticketPrefix}${ticketId}`
-    : ticketId
-    ? ticketId
-    : ''
-
-  const {stdout: localBranchName} = await execa('git', [
-    'branch',
-    '--show-current',
-  ])
+  const ticketNumber = determineTicketNumber({ticketId, ticketPrefix})
+  const localBranchName = await getCurrentBranchName()
 
   let remoteBranchName = format
     .replace('TICKET', ticketNumber || '')

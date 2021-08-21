@@ -5,7 +5,6 @@ const chalk = require('chalk')
 function error(string) {
   const x = emoji.get('x')
   console.log(`${x} ${string}\n`)
-  process.exit(1)
 }
 
 function warn(string) {
@@ -21,4 +20,34 @@ async function executeGitCommand(gitArgs) {
   }
 }
 
-module.exports = {error, warn, executeGitCommand}
+async function getCurrentBranchName() {
+  const {stdout: localBranchName} = await execa('git', [
+    'branch',
+    '--show-current',
+  ])
+
+  return localBranchName
+}
+
+function determineTicketNumber({ticketId, ticketPrefix}) {
+  const ticketIdContainsPrefix = ticketId && ticketId.match(/^[a-zA-Z]/)
+  if (!ticketIdContainsPrefix && !ticketPrefix) {
+    warn('No ticket prefix was found, only the ticket ID will be used')
+  }
+
+  return ticketIdContainsPrefix
+    ? ticketId
+    : ticketPrefix && ticketId
+    ? `${ticketPrefix}${ticketId}`
+    : ticketId
+    ? ticketId
+    : ''
+}
+
+module.exports = {
+  error,
+  warn,
+  executeGitCommand,
+  getCurrentBranchName,
+  determineTicketNumber,
+}
