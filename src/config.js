@@ -11,9 +11,15 @@ const defaultConfig = {
  * the applicable config file, and the defaults.
  */
 function getConfig(options, commander) {
-  const explorer = cosmiconfigSync('pushup')
-  let {config} = explorer.search()
+  // Commander.args contains positional arguments and
+  // any unknown options because they're not interpreted
+  // as options
+  const unknownOptions = commander.args.filter(arg => arg.startsWith('-'))
 
+  const cosmicConfigSearchResult = cosmiconfigSync('pushup').search()
+  if (!cosmicConfigSearchResult) return {...defaultConfig, unknownOptions}
+
+  let {config} = cosmicConfigSearchResult
   config = {
     ...defaultConfig,
     ...config,
@@ -23,11 +29,6 @@ function getConfig(options, commander) {
   const format = options.format ?? config.format
   const ticketPrefix = options.ticketPrefix ?? config.ticketPrefix
   const gitRemote = options.gitRemote ?? config.gitRemote
-
-  // Commander.args contains positional arguments and
-  // any unknown options because they're not interpreted
-  // as options
-  const unknownOptions = commander.args.filter(arg => arg.startsWith('-'))
 
   return {
     ticketId,

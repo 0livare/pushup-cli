@@ -31,7 +31,8 @@ async function getCurrentBranchName() {
 
 function determineTicketNumber({ticketId, ticketPrefix}) {
   const ticketIdContainsPrefix = ticketId && ticketId.match(/^[a-zA-Z]/)
-  if (!ticketIdContainsPrefix && !ticketPrefix) {
+
+  if (ticketId && !ticketIdContainsPrefix && !ticketPrefix) {
     warn('No ticket prefix was found, only the ticket ID will be used')
   }
 
