@@ -4,11 +4,11 @@ const chalk = require('chalk')
 
 function error(string) {
   const x = emoji.get('x')
-  console.log(`${x} ${string}\n`)
+  console.log(`${x} ${chalk.red(string)}`)
 }
 
 function warn(string) {
-  console.log(`${emoji.get('warning')} ${string}\n`)
+  console.log(`${emoji.get('warning')} ${string}`)
 }
 
 async function executeGitCommand(gitArgs) {

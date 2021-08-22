@@ -7,7 +7,13 @@ const createBranchName = require('../create/create-branch-name')
 
 async function findBranchName({ticketId, format, ticketPrefix}) {
   const ticketNumber = determineTicketNumber({ticketId, ticketPrefix})
-  const {stdout: branchOutput} = await execa('git', ['branch', '-r'])
+  const {stdout: rawRemoteBranches} = await execa('git', ['branch', '-r'])
+
+  // Git prints remote branch prefixed with the remote
+  // e.g. origin/foobar
+  const remoteBranches = rawRemoteBranches
+    .split('\n')
+    .map(remoteBranch => remoteBranch.substring(remoteBranch.indexOf('/') + 1))
 
   if (!ticketId) {
     // If no ticket ID has been provided, then we should
@@ -16,14 +22,16 @@ async function findBranchName({ticketId, format, ticketPrefix}) {
     // they have specified and the local branch they
     // have checked out.
 
-    return createBranchName({ticketId, format, ticketPrefix})
-  }
+    const possibleRemoteBranchName = await createBranchName({
+      ticketId,
+      format,
+      ticketPrefix,
+    })
 
-  // Git prints remote branch prefixed with the remote
-  // e.g. origin/foobar
-  const remoteBranches = branchOutput
-    .split('\n')
-    .map(remoteBranch => remoteBranch.substring(remoteBranch.indexOf('/') + 1))
+    return remoteBranches.includes(possibleRemoteBranchName)
+      ? possibleRemoteBranchName
+      : null
+  }
 
   const exactMatch = remoteBranches.find(branch =>
     branch.includes(ticketNumber),

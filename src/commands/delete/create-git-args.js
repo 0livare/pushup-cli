@@ -1,3 +1,4 @@
+const {error} = require('../../util')
 const findBranchName = require('./find-branch-name')
 
 async function createGitArgs({ticketId, format, ticketPrefix, gitRemote}) {
@@ -8,7 +9,10 @@ async function createGitArgs({ticketId, format, ticketPrefix, gitRemote}) {
     gitRemote,
   })
 
-  if (!remoteBranchName) process.exit(0)
+  if (!remoteBranchName) {
+    error('No matching remote branch could be found')
+    process.exit(0)
+  }
 
   return ['push', gitRemote, `:${remoteBranchName}`]
 }
