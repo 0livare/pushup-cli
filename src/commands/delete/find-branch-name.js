@@ -43,10 +43,7 @@ async function findBranchName({ticketId, format, ticketPrefix}) {
   )
 
   // We couldn't find any branches
-  if (!partialMatches.length) {
-    error(`No branch matching ticket ${chalk.yellow(ticketId)} could be found`)
-    return null
-  }
+  if (!partialMatches.length) return null
 
   const quitOption = 'Actually, nevermind'
   const {chosenBranch} = await inquirer.prompt([

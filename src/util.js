@@ -4,7 +4,7 @@ const chalk = require('chalk')
 
 function error(string) {
   const x = emoji.get('x')
-  console.log(`${x} ${chalk.red(string)}`)
+  console.log(x + ' ' + string)
 }
 
 function warn(string) {
