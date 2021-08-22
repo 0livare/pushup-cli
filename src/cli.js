@@ -47,4 +47,21 @@ cli
   )
   .allowUnknownOption()
 
+cli
+  .command('init')
+  .description('Create a pushup config file via interactive prompts')
+  .action(require('./commands/init'))
+  .option(
+    '--format <format>',
+    'The format of the name of the remote branch name to be deleted',
+  )
+  .option(
+    '-p, --ticketPrefix <ticketPrefix>',
+    'The alphabetic prefix that should be appended to ticket IDs',
+  )
+  .option(
+    '-r, --gitRemote <gitRemote>',
+    'The git remote that a branch should be deleted from',
+  )
+
 cli.version(package.version).parse(process.argv)

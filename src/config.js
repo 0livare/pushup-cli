@@ -29,7 +29,13 @@ function getConfig(options, commander) {
   // as options
   const unknownOptions = commander.args.filter(arg => arg.startsWith('-'))
 
-  return {ticketId, format, ticketPrefix, gitRemote, unknownOptions}
+  return {
+    ticketId,
+    format,
+    ticketPrefix,
+    gitRemote,
+    unknownOptions,
+  }
 }
 
 module.exports = {getConfig}
