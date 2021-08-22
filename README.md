@@ -23,7 +23,7 @@ To follow this standard, devs will often create a local branch in that format an
 
 ## Getting Started
 
-Install `pushup` globally with either npm or yarn:
+1. Install `pushup` globally with either npm or yarn:
 
 ```bash
 # Install with NPM
@@ -33,9 +33,9 @@ npm i -g pushup-cli
 yarn global add pushup-cli
 ```
 
-And then create a [configuration file](#configuration-file).
+2. Create a [configuration file](#configuration-file) by running `pushup init`.
 
-Now pushing a remote branch is as simple as
+3. Now, pushing a remote branch is as simple as
 
 ```bash
 ➜  git checkout -b myBranch
@@ -47,13 +47,15 @@ Branch 'myBranch' set up to track remote branch 'zp-NVM-123-myBranch' from 'orig
 
 ## Configuration File
 
+> 💡 The `pushup init` command will create a configuration file for you via interactive prompts
+
 ### Config file location
 
 pushup uses [cosmiconfig](https://github.com/davidtheclark/cosmiconfig#cosmiconfig) for configuration file support. This means you can configure pushup via [any standard configuration method](https://github.com/davidtheclark/cosmiconfig#cosmiconfig).
 
 You can place your config file directly in your project so that your whole team can take advantage of it, or in your home directory for your personal use.
 
-Placing the config directly in the project is nice because that allows customizing the ticket prefix on a per-project basis. You can also customize config options via the [CLI options](#CLI-Options).
+Placing the config directly in the project is nice because that allows customizing the ticket prefix on a per-project basis. You can also customize config options via the [CLI options](#CLI-Commands).
 
 ### Config file contents
 
@@ -108,10 +110,18 @@ Automatically delete the remote git branch corresponding to a particular ticket 
 
 Supports exactly the same options as the `create` command.
 
+### `pushup init`
+
+Create a pushup config file via interactive prompts.
+
+Supports exactly the same options as the `create` command, with the exception of `--ticket, -t`.
+
 ## Running locally
 
-1. Create a configuration file (as described [above](#configuration-file))
-1. Install dependencies with `yarn install`
-1. Allow running `pushup`in the terminal to run this project `yarn link`
-1. Run `pushup` in your terminal. You should get an error telling you to supply a ticket ID.
-   1. If you get "permission denied" when running the `pushup` command, run `yarn execute` and try again.
+1. Clone the repo
+1. Create a [configuration file](#configuration-file) by running `pushup init`
+1. Install dependencies with: `yarn install`
+1. Allow running `pushup` in the terminal to run invoke project: `npm link`
+   - _Yarn's link command does not respect the `bin` field in the package.json currently_
+1. Run `pushup 123` in your terminal inside of a git repo. A remote branch should have been created!
+   1. If you get "permission denied" when running the `pushup` command, run `yarn execute` inside this project and then try again

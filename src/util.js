@@ -4,11 +4,11 @@ const chalk = require('chalk')
 
 function error(string) {
   const x = emoji.get('x')
-  console.log(`${x} ${string}\n`)
+  console.log(x + ' ' + string)
 }
 
 function warn(string) {
-  console.log(`${emoji.get('warning')} ${string}\n`)
+  console.log(`${emoji.get('warning')} ${string}`)
 }
 
 async function executeGitCommand(gitArgs) {
@@ -31,7 +31,8 @@ async function getCurrentBranchName() {
 
 function determineTicketNumber({ticketId, ticketPrefix}) {
   const ticketIdContainsPrefix = ticketId && ticketId.match(/^[a-zA-Z]/)
-  if (!ticketIdContainsPrefix && !ticketPrefix) {
+
+  if (ticketId && !ticketIdContainsPrefix && !ticketPrefix) {
     warn('No ticket prefix was found, only the ticket ID will be used')
   }
 

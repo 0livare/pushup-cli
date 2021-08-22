@@ -1,3 +1,5 @@
+const chalk = require('chalk')
+const {error} = require('../../util')
 const findBranchName = require('./find-branch-name')
 
 async function createGitArgs({ticketId, format, ticketPrefix, gitRemote}) {
@@ -8,7 +10,14 @@ async function createGitArgs({ticketId, format, ticketPrefix, gitRemote}) {
     gitRemote,
   })
 
-  if (!remoteBranchName) process.exit(0)
+  if (!remoteBranchName) {
+    let errorMsg = ticketId
+      ? `No branch matching ticket ${chalk.yellow(ticketId)} could be found`
+      : 'No matching remote branch could be found, did you forget to supply a ticket?'
+
+    error(errorMsg)
+    process.exit(0)
+  }
 
   return ['push', gitRemote, `:${remoteBranchName}`]
 }

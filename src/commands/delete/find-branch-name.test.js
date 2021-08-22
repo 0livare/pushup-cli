@@ -35,7 +35,7 @@ it('suggests partial match from a single remote branch', async () => {
   mockRemoteBranches(['origin/FOO-123'])
   inquirer.prompt.mockResolvedValue({chosenBranch: true})
 
-  const branchToDelete = await findBranchName({
+  await findBranchName({
     ticketPrefix: 'ZACH-',
     ticketId: '123',
   })
@@ -48,9 +48,9 @@ it('suggests partial match from multiple remote branches', async () => {
   mockRemoteBranches(['origin/FOO-123', 'origin/FOO-456', 'origin/FOO-789'])
   inquirer.prompt.mockResolvedValue({chosenBranch: true})
 
-  const branchToDelete = await findBranchName({
+  await findBranchName({
     ticketPrefix: 'ZACH-',
-    ticketId: '789',
+    ticketId: '123',
   })
 
   const {choices} = inquirer.prompt.mock.calls[0][0][0]
@@ -67,4 +67,30 @@ it('returns the selected branch', async () => {
   })
 
   expect(branchToDelete).toBe('ZACH-123')
+})
+
+it('finds a match when no ticket information is available', async () => {
+  // Mock remote branches available
+  execa.mockResolvedValueOnce({stdout: 'zp-myBranch\nFOO-123'})
+  // Mock current branch
+  execa.mockResolvedValueOnce({stdout: 'myBranch'})
+
+  const branchToDelete = await findBranchName({
+    format: 'zp-BRANCH-TICKET',
+  })
+
+  expect(branchToDelete).toBe('zp-myBranch')
+})
+
+it('does not suggest deleting a branch that does not exist', async () => {
+  // Mock remote branches available
+  execa.mockResolvedValueOnce({stdout: 'FOO-123'})
+  // Mock current branch
+  execa.mockResolvedValueOnce({stdout: 'myBranch'})
+
+  const branchToDelete = await findBranchName({
+    format: 'zp-BRANCH-TICKET',
+  })
+
+  expect(branchToDelete).toBeNull()
 })
