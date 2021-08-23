@@ -64,4 +64,23 @@ cli
     'The git remote that a branch should be deleted from',
   )
 
+cli
+  .command('open')
+  .description('Open a ticket in your web browser')
+  .action(require('./commands/open'))
+  .argument('[ticket]', 'A ticket identifier')
+  .option('-t, --ticket <ticket>', 'A ticket identifier')
+  .option(
+    '--format <format>',
+    'The format of the name of the remote branch name to be deleted',
+  )
+  .option(
+    '-p, --ticketPrefix <ticketPrefix>',
+    'The alphabetic prefix that should be appended to ticket IDs',
+  )
+  .option(
+    '-u, --ticketUrl <ticketUrl>',
+    'The format of the URLs for your ticketing system',
+  )
+
 cli.version(package.version).parse(process.argv)

@@ -2,11 +2,11 @@ const execa = require('execa')
 const inquirer = require('inquirer')
 const chalk = require('chalk')
 
-const {determineTicketNumber, error} = require('../../util')
+const {ticketIdPrefixToNumber, error} = require('../../util')
 const createBranchName = require('../create/create-branch-name')
 
 async function findBranchName({ticketId, format, ticketPrefix}) {
-  const ticketNumber = determineTicketNumber({ticketId, ticketPrefix})
+  const ticketNumber = ticketIdPrefixToNumber({ticketId, ticketPrefix})
   const {stdout: rawRemoteBranches} = await execa('git', ['branch', '-r'])
 
   // Git prints remote branch prefixed with the remote

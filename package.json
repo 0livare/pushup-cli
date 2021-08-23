@@ -23,7 +23,8 @@
     "cosmiconfig": "^7.0.0",
     "execa": "^5.1.1",
     "inquirer": "^8.1.2",
-    "node-emoji": "^1.11.0"
+    "node-emoji": "^1.11.0",
+    "open": "^8.2.1"
   },
   "devDependencies": {
     "jest": "^27.0.6"

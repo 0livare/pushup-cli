@@ -4,6 +4,7 @@ const defaultConfig = {
   ticketPrefix: '',
   gitRemote: 'origin',
   format: 'TICKET-BRANCH',
+  ticketUrl: '',
 }
 
 /**
@@ -29,12 +30,14 @@ function getConfig(options, commander) {
   const format = options.format ?? config.format
   const ticketPrefix = options.ticketPrefix ?? config.ticketPrefix
   const gitRemote = options.gitRemote ?? config.gitRemote
+  const ticketUrl = options.ticketUrl ?? config.ticketUrl
 
   return {
     ticketId,
     format,
     ticketPrefix,
     gitRemote,
+    ticketUrl,
     unknownOptions,
   }
 }

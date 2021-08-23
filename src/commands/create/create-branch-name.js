@@ -1,7 +1,7 @@
-const {getCurrentBranchName, determineTicketNumber} = require('../../util')
+const {getCurrentBranchName, ticketIdPrefixToNumber} = require('../../util')
 
 async function createBranchName({ticketId, format, ticketPrefix}) {
-  const ticketNumber = determineTicketNumber({ticketId, ticketPrefix})
+  const ticketNumber = ticketIdPrefixToNumber({ticketId, ticketPrefix})
   const localBranchName = await getCurrentBranchName()
 
   let remoteBranchName = format

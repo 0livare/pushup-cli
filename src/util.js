@@ -29,7 +29,21 @@ async function getCurrentBranchName() {
   return localBranchName
 }
 
-function determineTicketNumber({ticketId, ticketPrefix}) {
+async function getCurrentRemoteTrackingBranch() {
+  try {
+    const {stdout: remoteTrackingBranch} = await execa('git', [
+      'rev-parse',
+      '--abbrev-ref',
+      '--symbolic-full-name',
+      '@{u}',
+    ])
+    return remoteTrackingBranch
+  } catch (e) {
+    return null
+  }
+}
+
+function ticketIdPrefixToNumber({ticketId, ticketPrefix}) {
   const ticketIdContainsPrefix = ticketId && ticketId.match(/^[a-zA-Z]/)
 
   if (ticketId && !ticketIdContainsPrefix && !ticketPrefix) {
@@ -50,5 +64,6 @@ module.exports = {
   warn,
   executeGitCommand,
   getCurrentBranchName,
-  determineTicketNumber,
+  getCurrentRemoteTrackingBranch,
+  ticketIdPrefixToNumber,
 }
