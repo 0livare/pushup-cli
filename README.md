@@ -25,25 +25,25 @@ To follow this standard, devs will often create a local branch in that format an
 
 1. Install `pushup` globally with either npm or yarn:
 
-```bash
-# Install with NPM
-npm i -g pushup-cli
+   ```bash
+   # Install with NPM
+   npm i -g pushup-cli
 
-# Or install with yarn
-yarn global add pushup-cli
-```
+   # Or install with yarn
+   yarn global add pushup-cli
+   ```
 
-2. Create a [configuration file](#configuration-file) by running `pushup init`.
+2. Create a [configuration file](#configuration-file) by running `pushup init` and following the prompts.
 
 3. Now, pushing a remote branch is as simple as
 
-```bash
-➜  git checkout -b myBranch
-Switched to a new branch 'myBranch'
+   ```bash
+   ➜  git checkout -b myBranch
+   Switched to a new branch 'myBranch'
 
-➜  pushup 123 # Where 123 is your ticket number
-Branch 'myBranch' set up to track remote branch 'zp-NVM-123-myBranch' from 'origin'.
-```
+   ➜  pushup 123 # Where 123 is your ticket number
+   Branch 'myBranch' set up to track remote branch 'zp-NVM-123-myBranch' from 'origin'.
+   ```
 
 ## Configuration File
 
@@ -55,7 +55,7 @@ pushup uses [cosmiconfig](https://github.com/davidtheclark/cosmiconfig#cosmiconf
 
 You can place your config file directly in your project so that your whole team can take advantage of it, or in your home directory for your personal use.
 
-Placing the config directly in the project is nice because that allows customizing the ticket prefix on a per-project basis. You can also customize config options via the [CLI options](#CLI-Commands).
+Placing the config directly in the project is nice because that allows customizing the ticket prefix on a per-project basis. You can also customize config values via the [CLI options](#CLI-Commands) each time you run a command.
 
 ### Config file contents
 
@@ -76,15 +76,27 @@ Your configuration file may contain the following keys:
   zp-TICKET-BRANCH
   ```
 
-- `ticketPrefix` _(default: `""`)_ - The alphabetic prefix that should be appended to ticket IDs. For example, if this is set to `FOO-`, the command `pushup 44` will result in BRANCH (one of the `format` placeholders) being equal to `FOO-44`.
+- `ticketPrefix` _(default: `""`)_ - The prefix that appears at the beginning of all of your ticket numbers. This prefix is typically used to identify which project a particular ticket is associated with.
 
-  If you want the alphabetic portion of the ticket number to be separated from the numeric portion, your `ticketPrefix` must end with that divider, for example a dash `-` as shown in the previous example.
+  For example, if this is set to `FOO-`, the command `pushup 44` will result in BRANCH (one of the `format` placeholders) being equal to `FOO-44`.
 
-  This prefix can also be supplied directly to the `pushup` command: `pushup BAR-123`. Doing so will cause `ticketPrefix` to be ignored.
+  > If your ticket numbers contain a divider (like a dash "-" for example), make sure that divider is included in your `ticketPrefix`.
+
+  This prefix can also be supplied all at once along with your ticket ID, like `pushup BAR-123`. Doing so will cause `ticketPrefix` to be ignored.
 
 - `gitRemote` _(default: `origin`)_ - The name of the git remote that should be pushed to.
 
+- `ticketUrl` (_default: `""`)_ - The URL of a ticket in your ticketing system. You must include `TICKET` somewhere in this URL as a placeholder for the ticket number that is being opened.
+
+  If you're using Jira as your ticking system for example, this might look something like:
+
+  ```json
+  "ticketUrl": "https://company.atlassian.net/browse/TICKET"
+  ```
+
 ## CLI Commands
+
+All CLI options also have an identically named config value. Please see the [config file contents](#config-file-contents) section for more information about each option.
 
 ### `pushup create [ticket]`
 
@@ -94,32 +106,53 @@ Automatically create remote git branches that follow your team's standard.
 
 As stated above, the simplest usage of the CLI is just `pushup 44`, where `44` is your ticket identifier. This wil be combined with either your configuration file or the default options to publish a remote branch.
 
-All configuration options also have an identically named CLI flag. If both are present, the CLI flag will take precedence. Please see the [config file contents](#config-file-contents) section for more information about each option.
+Supports the following options:
 
 - `--format`
 - `--ticketPrefix`, `-p`
 - `--gitRemote`, `-r`
-
-Finally, you prefer passing flags to positional arguments because they're better labeled, there are also the `--ticket` or `-t` flags to pass the ticket identifier.
+- `--ticket`, `-t` (identical to `[ticket]` argument)
 
 Any unknown options will be passed along to `git`.
 
 ### `pushup delete [ticket]`
 
-Automatically delete the remote git branch corresponding to a particular ticket number.
+Automatically delete the remote git branch corresponding to a particular ticket number. If a ticket number is not supplied, a best guess is made and suggested to you when possible.
 
-Supports exactly the same options as the `create` command.
+Supports the following options:
+
+- `--format`
+- `--ticketPrefix`, `-p`
+- `--gitRemote`, `-r`
+- `--ticket`, `-t` (identical to `[ticket]` argument)
+
+Any unknown options will be passed along to `git`.
 
 ### `pushup init`
 
 Create a pushup config file via interactive prompts.
 
-Supports exactly the same options as the `create` command, with the exception of `--ticket, -t`.
+Supports the following options:
+
+- `--format`
+- `--ticketPrefix`, `-p`
+- `--gitRemote`, `-r`
+
+### `pushup open [ticket]`
+
+Open a ticket in your web browser. Requires a `ticketUrl` either in your config file or supplied as a CLI option.
+
+Supports the following options:
+
+- `--format`
+- `--ticketPrefix`, `-p`
+- `--ticketUrl`, `-u`
+- `--ticket`, `-t` (identical to `[ticket]` argument)
 
 ## Running locally
 
 1. Clone the repo
-1. Create a [configuration file](#configuration-file) by running `pushup init`
+1. Create a [configuration file](#configuration-file) by running `pushup init` and following the prompts
 1. Install dependencies with: `yarn install`
 1. Allow running `pushup` in the terminal to run invoke project: `npm link`
    - _Yarn's link command does not respect the `bin` field in the package.json currently_
