@@ -28,5 +28,20 @@
   },
   "devDependencies": {
     "jest": "^27.0.6"
-  }
+  },
+  "keywords": [
+    "git",
+    "branch",
+    "management",
+    "remote",
+    "push",
+    "team",
+    "standard",
+    "standards",
+    "format",
+    "jira",
+    "ticket",
+    "number",
+    "automatic"
+  ]
 }
