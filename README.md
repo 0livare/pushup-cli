@@ -84,7 +84,17 @@ Your configuration file may contain the following keys:
 
 - `gitRemote` _(default: `origin`)_ - The name of the git remote that should be pushed to.
 
+- `ticketUrl` _default: `""`)_ - The URL of a ticket in your ticketing system. You must include `TICKET` somewhere in this URL as a placeholder for the ticket number that is being opened.
+
+If you're using Jira as your ticking system for example, this might look something like:
+
+```json
+"ticketUrl": "https://company.atlassian.net/browse/TICKET"
+```
+
 ## CLI Commands
+
+All CLI options also have an identically named config value. Please see the [config file contents](#config-file-contents) section for more information about each option.
 
 ### `pushup create [ticket]`
 
@@ -94,13 +104,12 @@ Automatically create remote git branches that follow your team's standard.
 
 As stated above, the simplest usage of the CLI is just `pushup 44`, where `44` is your ticket identifier. This wil be combined with either your configuration file or the default options to publish a remote branch.
 
-All configuration options also have an identically named CLI flag. If both are present, the CLI flag will take precedence. Please see the [config file contents](#config-file-contents) section for more information about each option.
+Supports the following options:
 
 - `--format`
 - `--ticketPrefix`, `-p`
 - `--gitRemote`, `-r`
-
-Finally, you prefer passing flags to positional arguments because they're better labeled, there are also the `--ticket` or `-t` flags to pass the ticket identifier.
+- `--ticket`, `-t` (identical to `[ticket]` argument)
 
 Any unknown options will be passed along to `git`.
 
@@ -108,13 +117,35 @@ Any unknown options will be passed along to `git`.
 
 Automatically delete the remote git branch corresponding to a particular ticket number.
 
-Supports exactly the same options as the `create` command.
+Supports the following options:
+
+- `--format`
+- `--ticketPrefix`, `-p`
+- `--gitRemote`, `-r`
+- `--ticket`, `-t` (identical to `[ticket]` argument)
+
+Any unknown options will be passed along to `git`.
 
 ### `pushup init`
 
 Create a pushup config file via interactive prompts.
 
-Supports exactly the same options as the `create` command, with the exception of `--ticket, -t`.
+Supports the following options:
+
+- `--format`
+- `--ticketPrefix`, `-p`
+- `--gitRemote`, `-r`
+
+### `pushup open [ticket]`
+
+Open a ticket in your web browser. Requires a `ticketUrl` either in your config file or supplied as a CLI option.
+
+Supports the following options:
+
+- `--format`
+- `--ticketPrefix`, `-p`
+- `--ticketUrl`, `-u`
+- `--ticket`, `-t` (identical to `[ticket]` argument)
 
 ## Running locally
 
