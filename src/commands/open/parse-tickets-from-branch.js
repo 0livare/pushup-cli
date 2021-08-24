@@ -13,7 +13,10 @@ function parseTicketsFromBranch({ticketPrefix, branch}) {
     new RegExp(`(${ticketPrefix}\\d+)`, 'g'),
   )
 
-  return ticketsWithPrefixes ? ticketsWithPrefixes : branch.match(/\d+/g)
+  if (ticketsWithPrefixes) return ticketsWithPrefixes
+
+  const ticketsWithLoneNumbers = branch.match(/\d+/g)
+  return ticketsWithLoneNumbers ? ticketsWithLoneNumbers : []
 }
 
 module.exports = parseTicketsFromBranch

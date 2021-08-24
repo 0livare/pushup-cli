@@ -31,12 +31,10 @@ async function findTicketNumbers({ticketId, ticketPrefix}) {
       ? [ticketNumberFromInputs]
       : ticketNumbersFromBranch.some(ticket => ticket.includes(ticketPrefix))
       ? ticketNumbersFromBranch
-      : null
+      : []
   }
 
-  return ticketNumberFromInputs
-    ? [ticketNumberFromInputs]
-    : ticketNumbersFromBranch
+  return ticketNumbersFromBranch
 }
 
 module.exports = findTicketNumbers
