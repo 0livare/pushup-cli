@@ -16,6 +16,13 @@ async function open(ticketIdArg, options, commander) {
     error(
       'No ticketUrl could be found.  Please supply it either in your config file or as a CLI option.',
     )
+    process.exit(0)
+  }
+  if (!ticketUrl.includes('TICKET')) {
+    error(
+      'Your ticketUrl must include TICKET as a placeholder to insert the ticket number',
+    )
+    process.exit(0)
   }
 
   const ticketId = ticketIdOption ?? ticketIdArg
