@@ -31,7 +31,7 @@ async function open(ticketIdArg, options, commander) {
     ticketPrefix,
   })
 
-  if (!ticketNumbers) {
+  if (!ticketNumbers || !ticketNumbers.length) {
     error('Could not determine ticket number')
     process.exit(0)
   }

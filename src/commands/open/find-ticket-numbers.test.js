@@ -108,3 +108,9 @@ it('finds lone numbers in the branch name when no prefix is present', async () =
   expect(result).toContain('123')
   expect(result).toContain('456')
 })
+
+it('finds lone numbers in the input name when no prefix is present', async () => {
+  const result = await findTicketNumbers({ticketId: '123'})
+  expect(result).toHaveLength(1)
+  expect(result).toContain('123')
+})
