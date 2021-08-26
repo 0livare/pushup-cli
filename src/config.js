@@ -1,6 +1,8 @@
+const os = require('os')
 const {cosmiconfigSync} = require('cosmiconfig')
+const {getCwd} = require('./util')
 
-const defaultConfig = {
+const defaultOptions = {
   ticketPrefix: '',
   gitRemote: 'origin',
   format: 'TICKET-BRANCH',
@@ -11,35 +13,39 @@ const defaultConfig = {
  * Determine the correct config by combining commander options,
  * the applicable config file, and the defaults.
  */
-function getConfig(options, commander) {
+async function getConfig(cliOptions, commander) {
   // Commander.args contains positional arguments and
   // any unknown options because they're not interpreted
   // as options
-  const unknownOptions = commander.args.filter(arg => arg.startsWith('-'))
+  const unknownOptions = commander?.args.filter(arg => arg.startsWith('-'))
 
   const cosmicConfigSearchResult = cosmiconfigSync('pushup').search()
-  if (!cosmicConfigSearchResult) return {...defaultConfig, unknownOptions}
+  if (!cosmicConfigSearchResult) return {...defaultOptions, unknownOptions}
 
-  let {config} = cosmicConfigSearchResult
-  config = {
-    ...defaultConfig,
-    ...config,
-  }
+  const {config} = cosmicConfigSearchResult
 
-  const ticketId = options.ticket
-  const format = options.format ?? config.format
-  const ticketPrefix = options.ticketPrefix ?? config.ticketPrefix
-  const gitRemote = options.gitRemote ?? config.gitRemote
-  const ticketUrl = options.ticketUrl ?? config.ticketUrl
+  const projects = Object.entries(config?.projects ?? {}).reduce(
+    (accum, [projectPath, config]) => {
+      const pathWithHome = projectPath.replace('~', os.homedir())
+      accum[pathWithHome] = config
+      return accum
+    },
+    {},
+  )
+
+  const cwd = await getCwd()
+  const currentProjectPath = Object.keys(projects).find(projectPath =>
+    cwd.includes(projectPath),
+  )
 
   return {
-    ticketId,
-    format,
-    ticketPrefix,
-    gitRemote,
-    ticketUrl,
+    ...defaultOptions,
+    ...(config ?? {}),
+    ...(projects[currentProjectPath] ?? {}),
+    ...cliOptions,
+    ticketId: cliOptions.ticket,
     unknownOptions,
   }
 }
 
-module.exports = {getConfig}
+module.exports = {getConfig, defaultOptions}

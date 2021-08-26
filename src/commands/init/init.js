@@ -6,7 +6,7 @@ const inquirer = require('inquirer')
 const chalk = require('chalk')
 const execa = require('execa')
 const emoji = require('node-emoji')
-const {error} = require('../../util')
+const {error, getCwd} = require('../../util')
 
 const textEntryPoint = chalk.blue('--> ')
 
@@ -15,7 +15,7 @@ async function init(options) {
 
   const {stdout: gitRemotesRaw} = await execa('git', ['remote'])
   const gitRemotes = gitRemotesRaw.split('\n')
-  const {stdout: cwd} = await execa('pwd')
+  const cwd = await getCwd()
 
   const {fileLocation, format, ticketPrefix, gitRemote, ticketUrl} =
     await promptUser({

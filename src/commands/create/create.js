@@ -9,7 +9,7 @@ async function create(ticketIdArg, options, commander) {
     ticketPrefix,
     gitRemote,
     unknownOptions,
-  } = getConfig(options, commander)
+  } = await getConfig(options, commander)
 
   const ticketId = ticketIdOption ?? ticketIdArg
 

@@ -10,7 +10,7 @@ async function open(ticketIdArg, options, commander) {
     ticketId: ticketIdOption,
     ticketPrefix,
     ticketUrl,
-  } = getConfig(options, commander)
+  } = await getConfig(options, commander)
 
   if (!ticketUrl) {
     error(

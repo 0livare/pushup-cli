@@ -20,13 +20,22 @@ async function executeGitCommand(gitArgs) {
   }
 }
 
-async function getCurrentBranchName() {
-  const {stdout: localBranchName} = await execa('git', [
-    'branch',
-    '--show-current',
-  ])
+async function getCwd() {
+  const {stdout: cwd} = await execa('pwd')
+  return cwd
+}
 
-  return localBranchName
+async function getCurrentBranchName() {
+  try {
+    const {stdout: localBranchName} = await execa('git', [
+      'branch',
+      '--show-current',
+    ])
+    return localBranchName
+  } catch (e) {
+    error(e)
+    process.exit(1)
+  }
 }
 
 async function getCurrentRemoteTrackingBranch() {
@@ -59,6 +68,7 @@ module.exports = {
   error,
   warn,
   executeGitCommand,
+  getCwd,
   getCurrentBranchName,
   getCurrentRemoteTrackingBranch,
   ticketIdPrefixToNumber,
