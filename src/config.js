@@ -1,4 +1,3 @@
-const os = require('os')
 const {cosmiconfigSync} = require('cosmiconfig')
 const {getCwd, resolveHomePath} = require('./util')
 
@@ -25,6 +24,7 @@ async function getConfig(cliOptions, commander) {
 
   const {config} = cosmicConfigSearchResult
 
+  // Resolve "~" in paths for all projects
   const projects = Object.entries(config?.projects ?? {}).reduce(
     (accum, [projectPath, config]) => {
       accum[resolveHomePath(projectPath)] = config

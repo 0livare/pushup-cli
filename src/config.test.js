@@ -3,7 +3,14 @@ const {getConfig, defaultOptions} = require('./config')
 jest.mock('cosmiconfig')
 const cosmiConfig = require('cosmiconfig')
 
-jest.mock('./util')
+jest.mock('./util', () => {
+  const actualUtil = jest.requireActual('./util')
+
+  return {
+    ...actualUtil,
+    getCwd: jest.fn(),
+  }
+})
 const util = require('./util')
 
 jest.mock('os')
@@ -15,6 +22,7 @@ const testConfig = {
   ticketPrefix: 'ticketPrefix',
   gitRemote: 'gitRemote',
   ticketUrl: 'ticketUrl',
+  initials: 'zp',
 }
 const projectTestConfig = {
   ...testConfig,
@@ -39,13 +47,21 @@ function mockConfigFile(config) {
   })
 }
 
+function expectConfigsToMatch({expected, result}) {
+  for (const key in defaultOptions) {
+    if (expected[key] === undefined) continue
+    expect(key + '__' + result[key]).toBe(key + '__' + expected[key])
+  }
+}
+
 it('returns default options if none other are provided', async () => {
   mockConfigFile(null)
   const result = await getConfig({})
 
-  for (const key in defaultOptions) {
-    expect(result[key]).toBe(defaultOptions[key])
-  }
+  expectConfigsToMatch({
+    result,
+    expected: defaultOptions,
+  })
 })
 
 it('returns ticket cli option as ticketId', async () => {
@@ -58,21 +74,23 @@ it('overrides defaults with config', async () => {
   mockConfigFile(testConfig)
   const result = await getConfig({})
 
-  for (const key in defaultOptions) {
-    expect(result[key]).toBe(testConfig[key])
-  }
+  expectConfigsToMatch({
+    result,
+    expected: testConfig,
+  })
 })
 
 it('overrides config with projects', async () => {
   mockConfigFile(projectTestConfig)
-  util.getCwd.mockResolvedValueOnce('/home/dev/project1')
+  util.getCwd.mockResolvedValue('/home/dev/project1')
 
   const result = await getConfig({})
   const configForProject = projectTestConfig.projects['/home/dev/project1']
 
-  for (const key in defaultOptions) {
-    expect(result[key]).toBe(configForProject[key])
-  }
+  expectConfigsToMatch({
+    result,
+    expected: configForProject,
+  })
 })
 
 it('maps "~" in a path to the user\'s home dir', async () => {
@@ -84,9 +102,10 @@ it('maps "~" in a path to the user\'s home dir', async () => {
   const result = await getConfig({})
   const configForProject = projectTestConfig.projects['~/dev/project2']
 
-  for (const key in defaultOptions) {
-    expect(result[key]).toBe(configForProject[key])
-  }
+  expectConfigsToMatch({
+    result,
+    expected: configForProject,
+  })
 })
 
 it('resolves the correct project when cwd is a sub-directory', async () => {
@@ -96,9 +115,10 @@ it('resolves the correct project when cwd is a sub-directory', async () => {
   const result = await getConfig({})
   const configForProject = projectTestConfig.projects['/home/dev/project1']
 
-  for (const key in defaultOptions) {
-    expect(result[key]).toBe(configForProject[key])
-  }
+  expectConfigsToMatch({
+    result,
+    expected: configForProject,
+  })
 })
 
 it('falls back to other config values if project is not present', async () => {
@@ -107,9 +127,10 @@ it('falls back to other config values if project is not present', async () => {
 
   const result = await getConfig({})
 
-  for (const key in defaultOptions) {
-    expect(result[key]).toBe(testConfig[key])
-  }
+  expectConfigsToMatch({
+    result,
+    expected: testConfig,
+  })
 })
 
 it('overrides projects with CLI options', async () => {
@@ -123,9 +144,10 @@ it('overrides projects with CLI options', async () => {
 
   const result = await getConfig(cliOptions)
 
-  for (const key in defaultOptions) {
-    expect(result[key]).toBe(cliOptions[key])
-  }
+  expectConfigsToMatch({
+    result,
+    expected: cliOptions,
+  })
 })
 
 it('passes through unknown CLI options', async () => {
