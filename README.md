@@ -2,7 +2,7 @@
 
 Automatically push remote git branches that follow your team's standard.
 
-## Why
+## Why?
 
 Teams often create rules about the format of their branch names. The goal is usually to be able to identify who created the branch, or to be able to correlate the branch with a ticket number in your ticketing system (e.g. Jira). For example:
 
@@ -19,7 +19,7 @@ To follow this standard, devs will often create a local branch in that format an
 - Your branch names become so long and a pain to type
 - Even terminal auto-complete can't help very much because the repetitive part of the branch name tends to be at the beginning, and for auto-complete to work you at least have to type it out until you get to a unique portion of the branch name.
 
-**pushup-cli** solves that problem by allowing you to create a simple description branch name, and automatically publishing a remote branch name that meets your teams standards.
+**pushup-cli** solves that problem by allowing you to create a short local branch name, and automatically publishing a remote branch name that meets your teams standards.
 
 ## Getting Started
 
@@ -55,7 +55,7 @@ pushup uses [cosmiconfig](https://github.com/davidtheclark/cosmiconfig#cosmiconf
 
 You can place your config file directly in your project so that your whole team can take advantage of it, or in your home directory for your personal use.
 
-Placing the config directly in the project is nice because that allows customizing the ticket prefix on a per-project basis. You can also customize config values via the [CLI options](#CLI-Commands) each time you run a command.
+Placing the config directly in the project is nice because that allows customizing the ticket prefix on a per-project basis. You can also customize config values via the [CLI options](#CLI-Commands) each time you run a command. If your team's not using pushup but you need to support multiple projects, (after reminding them they're wasting their valuable time) take a look at the [projects](#Projects) section below.
 
 ### Config file contents
 
@@ -72,9 +72,9 @@ Your configuration file may contain the following keys:
   Here are some example formats:
 
   ```
-  zp/BRANCH
+  INITIALS/BRANCH
   TICKET-BRANCH
-  zp-TICKET-BRANCH
+  foo-TICKET-BRANCH-bar
   ```
 
 - `ticketPrefix` _(default: `""`)_ - The prefix that appears at the beginning of all of your ticket numbers. This prefix is typically used to identify which project a particular ticket is associated with.
@@ -109,7 +109,7 @@ See `.pushuprc SAMPLE.json` for an example.
 
 All CLI options also have an identically named config value. Please see the [config file contents](#config-file-contents) section for more information about each option.
 
-### `pushup create [ticket]`
+### `pushup [ticket]`, `pushup create [ticket]`
 
 > This is the default command, and is identical to just running `pushup [ticket]`.
 
