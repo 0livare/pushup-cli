@@ -119,12 +119,13 @@ As stated above, the simplest usage of the CLI is just `pushup 44`, where `44` i
 
 Supports the following options:
 
-- `--format`
-- `--ticketPrefix`, `-p`
-- `--gitRemote`, `-r`
-- `--ticket`, `-t` (identical to `[ticket]` argument)
 - `--delete`, `-d`(Synonym for`pushup delete` command)
+- `--format`
+- `--gitRemote`, `-r`
 - `--help`
+- `--initials`, `-i`
+- `--ticket`, `-t` (identical to `[ticket]` argument)
+- `--ticketPrefix`, `-p`
 
 Any unknown options will be passed along to `git`.
 
@@ -135,10 +136,11 @@ Automatically delete the remote git branch corresponding to a particular ticket 
 Supports the following options:
 
 - `--format`
-- `--ticketPrefix`, `-p`
 - `--gitRemote`, `-r`
-- `--ticket`, `-t` (identical to `[ticket]` argument)
 - `--help`
+- `--initials`, `-i`
+- `--ticket`, `-t` (identical to `[ticket]` argument)
+- `--ticketPrefix`, `-p`
 
 Any unknown options will be passed along to `git`.
 
@@ -149,9 +151,10 @@ Create a pushup config file via interactive prompts.
 Supports the following options:
 
 - `--format`
-- `--ticketPrefix`, `-p`
 - `--gitRemote`, `-r`
 - `--help`
+- `--initials`, `-i`
+- `--ticketPrefix`, `-p`
 
 ### `pushup open [ticket]`
 
@@ -160,10 +163,11 @@ Open a ticket in your web browser. Requires a `ticketUrl` either in your config 
 Supports the following options:
 
 - `--format`
+- `--help`
+- `--initials`, `-i`
+- `--ticket`, `-t` (identical to `[ticket]` argument)
 - `--ticketPrefix`, `-p`
 - `--ticketUrl`, `-u`
-- `--ticket`, `-t` (identical to `[ticket]` argument)
-- `--help`
 
 ## Running locally
 

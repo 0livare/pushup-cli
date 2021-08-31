@@ -1,4 +1,5 @@
 const {cosmiconfigSync} = require('cosmiconfig')
+const chalk = require('chalk')
 const {getCwd, resolveHomePath} = require('./util')
 
 const defaultOptions = {
@@ -22,10 +23,14 @@ async function getConfig(cliOptions, commander) {
   const cosmicConfigSearchResult = cosmiconfigSync('pushup').search()
   if (!cosmicConfigSearchResult) return {...defaultOptions, unknownOptions}
 
-  const {config} = cosmicConfigSearchResult
+  console.log(
+    chalk.gray(`Using config from ${cosmicConfigSearchResult.filepath}`),
+  )
+
+  const {projects, ...configFile} = cosmicConfigSearchResult.config
 
   // Resolve "~" in paths for all projects
-  const projects = Object.entries(config?.projects ?? {}).reduce(
+  const resolvedProjects = Object.entries(projects ?? {}).reduce(
     (accum, [projectPath, config]) => {
       accum[resolveHomePath(projectPath)] = config
       return accum
@@ -34,14 +39,14 @@ async function getConfig(cliOptions, commander) {
   )
 
   const cwd = await getCwd()
-  const currentProjectPath = Object.keys(projects).find(projectPath =>
+  const currentProjectPath = Object.keys(resolvedProjects).find(projectPath =>
     cwd.includes(projectPath),
   )
 
   return {
     ...defaultOptions,
-    ...(config ?? {}),
-    ...(projects[currentProjectPath] ?? {}),
+    ...(configFile ?? {}),
+    ...(resolvedProjects[currentProjectPath] ?? {}),
     ...cliOptions,
     ticketId: cliOptions.ticket,
     unknownOptions,

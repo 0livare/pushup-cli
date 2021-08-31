@@ -10,20 +10,21 @@ cli
   )
   .action(require('./commands/create'))
   .argument('[ticket]', 'A ticket identifier')
-  .option('-t, --ticket <ticket>', 'A ticket identifier')
+  .option('-d, --delete', 'Synonym for "pushup delete" command')
   .option(
     '--format <format>',
     'The format of the name of the remote branch name to be created',
   )
   .option(
-    '-p, --ticketPrefix <ticketPrefix>',
-    'The alphabetic prefix that should be appended to ticket IDs',
-  )
-  .option(
     '-r, --gitRemote <gitRemote>',
     'The git remote that a branch should be pushed to',
   )
-  .option('-d, --delete', 'Synonym for "pushup delete" command')
+  .option('-i, --initials <initials>', 'The initials of your name')
+  .option('-t, --ticket <ticket>', 'A ticket identifier')
+  .option(
+    '-p, --ticketPrefix <ticketPrefix>',
+    'The alphabetic prefix that should be appended to ticket IDs',
+  )
   .allowUnknownOption()
 
 cli
@@ -33,18 +34,19 @@ cli
   )
   .action(require('./commands/delete'))
   .argument('[ticket]', 'A ticket identifier')
-  .option('-t, --ticket <ticket>', 'A ticket identifier')
   .option(
     '--format <format>',
     'The format of the name of the remote branch name to be deleted',
   )
   .option(
-    '-p, --ticketPrefix <ticketPrefix>',
-    'The alphabetic prefix that should be appended to ticket IDs',
-  )
-  .option(
     '-r, --gitRemote <gitRemote>',
     'The git remote that a branch should be deleted from',
+  )
+  .option('-i, --initials <initials>', 'The initials of your name')
+  .option('-t, --ticket <ticket>', 'A ticket identifier')
+  .option(
+    '-p, --ticketPrefix <ticketPrefix>',
+    'The alphabetic prefix that should be appended to ticket IDs',
   )
   .allowUnknownOption()
 
@@ -57,12 +59,13 @@ cli
     'The format of the name of the remote branch name to be deleted',
   )
   .option(
-    '-p, --ticketPrefix <ticketPrefix>',
-    'The alphabetic prefix that should be appended to ticket IDs',
-  )
-  .option(
     '-r, --gitRemote <gitRemote>',
     'The git remote that a branch should be deleted from',
+  )
+  .option('-i, --initials <initials>', 'The initials of your name')
+  .option(
+    '-p, --ticketPrefix <ticketPrefix>',
+    'The alphabetic prefix that should be appended to ticket IDs',
   )
 
 cli
@@ -70,15 +73,16 @@ cli
   .description('Open a ticket in your web browser')
   .action(require('./commands/open'))
   .argument('[ticket]', 'A ticket identifier')
-  .option('-t, --ticket <ticket>', 'A ticket identifier')
   .option(
     '--format <format>',
     'The format of the name of the remote branch name to be deleted',
   )
+  .option('-i, --initials <initials>', 'The initials of your name')
   .option(
     '-p, --ticketPrefix <ticketPrefix>',
     'The alphabetic prefix that should be appended to ticket IDs',
   )
+  .option('-t, --ticket <ticket>', 'A ticket identifier')
   .option(
     '-u, --ticketUrl <ticketUrl>',
     'The format of the URLs for your ticketing system',
