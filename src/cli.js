@@ -23,6 +23,7 @@ cli
     '-r, --gitRemote <gitRemote>',
     'The git remote that a branch should be pushed to',
   )
+  .option('-d, --delete', 'Synonym for "pushup delete" command')
   .allowUnknownOption()
 
 cli

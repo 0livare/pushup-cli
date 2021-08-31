@@ -120,6 +120,7 @@ Supports the following options:
 - `--ticketPrefix`, `-p`
 - `--gitRemote`, `-r`
 - `--ticket`, `-t` (identical to `[ticket]` argument)
+- `--delete`, `-d`(Synonym for`pushup delete` command)
 - `--help`
 
 Any unknown options will be passed along to `git`.
