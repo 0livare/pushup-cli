@@ -3,10 +3,11 @@ const os = require('os')
 const inquirer = require('inquirer')
 const chalk = require('chalk')
 const removeEmptyConfigValues = require('./remove-empty-config-values')
+const {getGitRemotes, resolveHomePath} = require('../../util')
 
 const textEntryPoint = chalk.blue('--> ')
 
-async function promptUser({gitRemotes, cwd, options}) {
+async function promptUser({cwd, options}) {
   const {fileLocation} = await inquirer.prompt([
     {
       name: 'fileLocation',
@@ -45,15 +46,21 @@ async function promptUser({gitRemotes, cwd, options}) {
         type: 'input',
         message: `What's the path to this project?\n${textEntryPoint}`,
         validate(enteredProjectPath) {
-          const pathWithoutTilde = enteredProjectPath.replace('~', os.homedir())
-          return fs.existsSync(pathWithoutTilde) ? true : 'The path must exist'
+          const pathWithoutTilde = resolveHomePath(enteredProjectPath)
+          return !enteredProjectPath || fs.existsSync(pathWithoutTilde)
+            ? true
+            : 'The path must exist'
         },
       },
     ])
 
+    if (!projectPath) {
+      defineMoreProjects = false
+      break
+    }
+
     const projectConfig = await promptForConfig({
-      gitRemotes,
-      cwd,
+      cwd: projectPath,
       options,
       projectSuffix: chalk.yellow(` for ${projectPath}`),
     })
@@ -81,8 +88,6 @@ async function promptUser({gitRemotes, cwd, options}) {
   let defaultConfig = {}
   if (supplyDefault) {
     defaultConfig = await promptForConfig({
-      gitRemotes,
-      cwd,
       options,
       projectSuffix: chalk.yellow(` for other projects (the default)`),
     })
@@ -99,7 +104,6 @@ async function promptUser({gitRemotes, cwd, options}) {
 
   async function standardPrompt() {
     const config = await promptForConfig({
-      gitRemotes,
       cwd,
       options,
       projectSuffix: '',
@@ -108,9 +112,11 @@ async function promptUser({gitRemotes, cwd, options}) {
   }
 }
 
-async function promptForConfig({gitRemotes, cwd, options, projectSuffix}) {
+async function promptForConfig({cwd, options, projectSuffix}) {
+  const gitRemotes = cwd && (await getGitRemotes(cwd))
+
   // prettier-ignore
-  return await inquirer.prompt([
+  const answers = await inquirer.prompt([
     {
       name: 'format',
       type: 'input',
@@ -139,10 +145,10 @@ async function promptForConfig({gitRemotes, cwd, options, projectSuffix}) {
     },
     {
       name: 'gitRemote',
-      type: 'list',
-      message: `Which git remote should branches be pushed to by default${projectSuffix}?`,
+      type: gitRemotes ? 'list' : 'input',
+      message: `Which git remote should branches be pushed to by default${projectSuffix}?${gitRemotes ? '' : `\n${textEntryPoint}`}`,
       choices: gitRemotes,
-      when: gitRemotes.length > 1 && !options.gitRemote,
+      when: !gitRemotes || gitRemotes.length > 1 && !options.gitRemote,
     },
     {
       name: 'ticketUrl',
@@ -165,6 +171,11 @@ async function promptForConfig({gitRemotes, cwd, options, projectSuffix}) {
       }
     },
   ])
+
+  return {
+    ...answers,
+    gitRemote: options.gitRemote || answers.gitRemote || gitRemotes[0],
+  }
 }
 
 module.exports = {promptUser, textEntryPoint}

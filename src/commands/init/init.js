@@ -1,27 +1,19 @@
 const path = require('path')
 const fs = require('fs')
 const chalk = require('chalk')
-const execa = require('execa')
 const emoji = require('node-emoji')
 const {error, getCwd} = require('../../util')
 
 const checkForExistingConfig = require('./check-for-existing-config')
 const removeEmptyConfigValues = require('./remove-empty-config-values')
-const {promptUser} = require('./propt-user')
+const {promptUser} = require('./prompt-user')
 
 async function init(options) {
   await checkForExistingConfig()
-
-  const {stdout: gitRemotesRaw} = await execa('git', ['remote'])
-  const gitRemotes = gitRemotesRaw.split('\n')
   const cwd = await getCwd()
 
   const {fileLocation, format, ticketPrefix, gitRemote, ticketUrl, projects} =
-    await promptUser({
-      gitRemotes,
-      cwd,
-      options,
-    })
+    await promptUser({cwd, options})
 
   const finalConfigValues = {
     format: options.format || format,

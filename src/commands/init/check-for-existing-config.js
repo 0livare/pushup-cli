@@ -1,7 +1,7 @@
 const {cosmiconfigSync} = require('cosmiconfig')
 const inquirer = require('inquirer')
 const chalk = require('chalk')
-const {textEntryPoint} = require('./propt-user')
+const {textEntryPoint} = require('./prompt-user')
 
 async function checkForExistingConfig() {
   const cosmicConfig = cosmiconfigSync('pushup')

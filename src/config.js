@@ -1,6 +1,6 @@
 const os = require('os')
 const {cosmiconfigSync} = require('cosmiconfig')
-const {getCwd} = require('./util')
+const {getCwd, resolveHomePath} = require('./util')
 
 const defaultOptions = {
   ticketPrefix: '',
@@ -26,8 +26,7 @@ async function getConfig(cliOptions, commander) {
 
   const projects = Object.entries(config?.projects ?? {}).reduce(
     (accum, [projectPath, config]) => {
-      const pathWithHome = projectPath.replace('~', os.homedir())
-      accum[pathWithHome] = config
+      accum[resolveHomePath(projectPath)] = config
       return accum
     },
     {},
