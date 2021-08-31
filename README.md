@@ -67,6 +67,7 @@ Your configuration file may contain the following keys:
 
   - `TICKET`: Will be replaced with the parsed ticket number
   - `BRANCH`: Will be replaced with the name of your currently checked out local branch
+  - `INITIALS`: Will be replaced with the `initials` config value. This is useful for teams sharing the same `format`.
 
   Here are some example formats:
 
@@ -93,6 +94,8 @@ Your configuration file may contain the following keys:
   ```json
   "ticketUrl": "https://company.atlassian.net/browse/TICKET"
   ```
+
+- `initials` _(default: `""`)_ - The initials of your name. If provided, this is used to fill the INITIALS placeholder in the `format` option.
 
 ### Projects
 

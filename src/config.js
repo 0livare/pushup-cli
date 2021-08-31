@@ -7,6 +7,7 @@ const defaultOptions = {
   gitRemote: 'origin',
   format: 'TICKET-BRANCH',
   ticketUrl: '',
+  initials: '',
 }
 
 /**

@@ -12,21 +12,12 @@ async function create(ticketIdArg, options, commander) {
     return
   }
 
-  const {
-    ticketId: ticketIdOption,
-    format,
-    ticketPrefix,
-    gitRemote,
-    unknownOptions,
-  } = await getConfig(options, commander)
-
-  const ticketId = ticketIdOption ?? ticketIdArg
+  const config = await getConfig(options, commander)
+  const {ticketId: ticketIdOption, unknownOptions} = config
 
   const gitArgs = await createGitArgs({
-    ticketId,
-    format,
-    ticketPrefix,
-    gitRemote,
+    ...config,
+    ticketId: ticketIdOption ?? ticketIdArg,
   })
   await executeGitCommand([...gitArgs, ...unknownOptions])
 }

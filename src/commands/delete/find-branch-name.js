@@ -2,10 +2,12 @@ const execa = require('execa')
 const inquirer = require('inquirer')
 const chalk = require('chalk')
 
-const {ticketIdPrefixToNumber, error} = require('../../util')
+const {ticketIdPrefixToNumber} = require('../../util')
 const createBranchName = require('../create/create-branch-name')
 
-async function findBranchName({ticketId, format, ticketPrefix}) {
+async function findBranchName(config) {
+  const {ticketId, ticketPrefix} = config
+
   const ticketNumber = ticketIdPrefixToNumber({ticketId, ticketPrefix})
   const {stdout: rawRemoteBranches} = await execa('git', ['branch', '-r'])
 
@@ -22,11 +24,7 @@ async function findBranchName({ticketId, format, ticketPrefix}) {
     // they have specified and the local branch they
     // have checked out.
 
-    const possibleRemoteBranchName = await createBranchName({
-      ticketId,
-      format,
-      ticketPrefix,
-    })
+    const possibleRemoteBranchName = await createBranchName(config)
 
     return remoteBranches.includes(possibleRemoteBranchName)
       ? possibleRemoteBranchName
