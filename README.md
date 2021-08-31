@@ -120,6 +120,7 @@ Supports the following options:
 - `--ticketPrefix`, `-p`
 - `--gitRemote`, `-r`
 - `--ticket`, `-t` (identical to `[ticket]` argument)
+- `--help`
 
 Any unknown options will be passed along to `git`.
 
@@ -133,6 +134,7 @@ Supports the following options:
 - `--ticketPrefix`, `-p`
 - `--gitRemote`, `-r`
 - `--ticket`, `-t` (identical to `[ticket]` argument)
+- `--help`
 
 Any unknown options will be passed along to `git`.
 
@@ -145,6 +147,7 @@ Supports the following options:
 - `--format`
 - `--ticketPrefix`, `-p`
 - `--gitRemote`, `-r`
+- `--help`
 
 ### `pushup open [ticket]`
 
@@ -156,6 +159,7 @@ Supports the following options:
 - `--ticketPrefix`, `-p`
 - `--ticketUrl`, `-u`
 - `--ticket`, `-t` (identical to `[ticket]` argument)
+- `--help`
 
 ## Running locally
 

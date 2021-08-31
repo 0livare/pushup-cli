@@ -42,6 +42,7 @@
     "jira",
     "ticket",
     "number",
-    "automatic"
+    "automatic",
+    "pattern"
   ]
 }
