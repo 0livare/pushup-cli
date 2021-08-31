@@ -24,26 +24,25 @@ const testConfig = {
   ticketUrl: 'ticketUrl',
   initials: 'zp',
 }
+
+function prefixObjectValues(object, prefix) {
+  return Object.entries(object).reduce((accum, [key, val]) => {
+    accum[key] = prefix + val
+    return accum
+  }, {})
+}
+
 const projectTestConfig = {
   ...testConfig,
   projects: {
-    '/home/dev/project1': Object.entries(testConfig).reduce(
-      (accum, [key, val]) => {
-        accum[key] = 'project1-' + val
-        return accum
-      },
-      {},
-    ),
-    '~/dev/project2': Object.entries(testConfig).reduce((accum, [key, val]) => {
-      accum[key] = 'project2-' + val
-      return accum
-    }, {}),
+    '/home/dev/project1': prefixObjectValues(testConfig, 'project1-'),
+    '~/dev/project2': prefixObjectValues(testConfig, 'project2-'),
   },
 }
 
 function mockConfigFile(config) {
   cosmiConfig.cosmiconfigSync.mockReturnValueOnce({
-    search: () => ({config}),
+    search: () => ({config, filepath: 'mock'}),
   })
 }
 
@@ -64,8 +63,14 @@ it('returns default options if none other are provided', async () => {
   })
 })
 
-it('returns ticket cli option as ticketId', async () => {
+it('returns ticket cli option as ticketId when no config is found', async () => {
   mockConfigFile(null)
+  const result = await getConfig({ticket: 1234})
+  expect(result.ticketId).toBe(1234)
+})
+
+it('returns ticket cli option as ticketId when config is found', async () => {
+  mockConfigFile(testConfig)
   const result = await getConfig({ticket: 1234})
   expect(result.ticketId).toBe(1234)
 })

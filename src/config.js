@@ -21,7 +21,9 @@ async function getConfig(cliOptions, commander) {
   const unknownOptions = commander?.args.filter(arg => arg.startsWith('-'))
 
   const cosmicConfigSearchResult = cosmiconfigSync('pushup').search()
-  if (!cosmicConfigSearchResult) return {...defaultOptions, unknownOptions}
+  if (!cosmicConfigSearchResult?.config) {
+    return {...defaultOptions, ticketId: cliOptions.ticket, unknownOptions}
+  }
 
   console.log(
     chalk.gray(`Using config from ${cosmicConfigSearchResult.filepath}`),
