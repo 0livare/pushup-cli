@@ -124,9 +124,16 @@ async function promptForConfig({cwd, options, projectSuffix}) {
         `What do you want the format of your remote branches to be${projectSuffix}?`,
         chalk.gray('  Use TICKET as a placeholder for your ticket number (optional)'),
         chalk.gray('  Use BRANCH as a placeholder for your local branch name (optional)'),
+        chalk.gray('  Use INITIALS as a placeholder for your name\'s initials (optional)'),
         textEntryPoint,
       ].join('\n'),
       when: !options.format,
+    },
+    {
+      name: 'initials',
+      type: 'input',
+      message: `What are the initials for your name?\n${textEntryPoint}`,
+      when: answers => !options.initials && answers.format.includes('INITIALS')
     },
     {
       name: 'ticketPrefix',
@@ -136,12 +143,7 @@ async function promptForConfig({cwd, options, projectSuffix}) {
         chalk.gray('  Be sure to include a dash or other divider if it exists'), 
         textEntryPoint,
       ].join('\n'),
-      when(answers) {
-        if (options.ticketPrefix) return false
-
-        const {format} = answers
-        return format.includes('TICKET')
-      },
+      when: answers => !options.ticketPrefix && answers.format.includes('TICKET'),
     },
     {
       name: 'gitRemote',

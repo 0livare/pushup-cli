@@ -12,14 +12,12 @@ async function init(options) {
   await checkForExistingConfig()
   const cwd = await getCwd()
 
-  const {fileLocation, format, ticketPrefix, gitRemote, ticketUrl, projects} =
-    await promptUser({cwd, options})
+  const userAnswers = await promptUser({cwd, options})
+  const {fileLocation, projects} = userAnswers
 
   const finalConfigValues = {
-    format: options.format || format,
-    ticketPrefix: options.ticketPrefix || ticketPrefix,
-    gitRemote: options.gitRemote || gitRemote,
-    ticketUrl: options.ticketUrl || ticketUrl,
+    ...userAnswers,
+    ...options,
     projects,
   }
 
