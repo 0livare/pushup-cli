@@ -32,6 +32,22 @@ async function getGitRemotes(cwd) {
   }
 }
 
+async function getRemoteGitBranches() {
+  try {
+    const {stdout: rawRemoteBranches} = await execa('git', ['branch', '-r'])
+
+    // Git prints remote branch prefixed with the remote
+    // e.g. origin/foobar
+    return rawRemoteBranches
+      .split('\n')
+      .map(remoteBranch =>
+        remoteBranch.substring(remoteBranch.indexOf('/') + 1),
+      )
+  } catch (e) {
+    return []
+  }
+}
+
 async function getCurrentBranchName() {
   try {
     const {stdout: localBranchName} = await execa('git', [
@@ -47,13 +63,15 @@ async function getCurrentBranchName() {
 
 async function getCurrentRemoteTrackingBranch() {
   try {
+    // e.g. origin/foo
     const {stdout: remoteTrackingBranch} = await execa('git', [
       'rev-parse',
       '--abbrev-ref',
       '--symbolic-full-name',
       '@{u}',
     ])
-    return remoteTrackingBranch
+
+    return remoteTrackingBranch.split('/')[1]
   } catch (e) {
     return null
   }
@@ -84,6 +102,7 @@ module.exports = {
   warn,
   executeGitCommand,
   getGitRemotes,
+  getRemoteGitBranches,
   getCurrentBranchName,
   getCurrentRemoteTrackingBranch,
   ticketIdPrefixToNumber,
