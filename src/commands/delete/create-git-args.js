@@ -1,11 +1,12 @@
 const chalk = require('chalk')
+const inquirer = require('inquirer')
 const {error} = require('../../util')
-const findBranchName = require('./find-branch-name')
+const findBranchNames = require('./find-branch-names')
 
 async function createGitArgs(config) {
-  const remoteBranchName = await findBranchName(config)
+  const remoteBranchNames = await findBranchNames(config)
 
-  if (!remoteBranchName) {
+  if (!remoteBranchNames.length) {
     let errorMsg = config.ticketId
       ? `No branch matching ticket ${chalk.yellow(
           config.ticketId,
@@ -16,7 +17,26 @@ async function createGitArgs(config) {
     process.exit(0)
   }
 
-  return ['push', config.gitRemote, `:${remoteBranchName}`]
+  if (remoteBranchNames.length > 1) {
+    // We found multiple possible matches
+    const quitOption = 'Actually, nevermind'
+    const {chosenBranch} = await inquirer.prompt([
+      {
+        name: 'chosenBranch',
+        type: 'list',
+        message: `Which branch would you like to delete?\n`,
+        choices: [...remoteBranchNames, quitOption],
+      },
+    ])
+
+    if (chosenBranch === quitOption) {
+      process.exit(0)
+    }
+
+    remoteBranchNames[0] = chosenBranch
+  }
+
+  return ['push', config.gitRemote, `:${remoteBranchNames[0]}`]
 }
 
 module.exports = createGitArgs

@@ -12,10 +12,10 @@ async function init(options) {
   await checkForExistingConfig()
 
   const userAnswers = await promptUser({cwd: process.cwd(), options})
-  const {fileLocation, projects} = userAnswers
+  const {fileLocation, projects, ...otherUserAnswers} = userAnswers
 
   const finalConfigValues = {
-    ...userAnswers,
+    ...otherUserAnswers,
     ...options,
     projects,
   }

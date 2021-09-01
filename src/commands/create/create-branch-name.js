@@ -1,25 +1,55 @@
+const chalk = require('chalk')
 const {getCurrentBranchName, ticketIdPrefixToNumber} = require('../../util')
 
-async function createBranchName(config) {
+async function createBranchName(
+  config,
+  {printWarnings} = {printWarnings: true},
+) {
   const {ticketId, format, ticketPrefix, initials} = config
 
   const ticketNumber = ticketIdPrefixToNumber({ticketId, ticketPrefix})
   const localBranchName = await getCurrentBranchName()
 
-  let remoteBranchName = format
-    .replace('TICKET', ticketNumber || '')
-    .replace('BRANCH', localBranchName || '')
-    .replace('INITIALS', initials || '')
+  if (printWarnings && format.includes('TICKET') && !ticketNumber) {
+    console.log(
+      chalk.yellow(
+        'warn: Format requires ticket number but one was not provided',
+      ),
+    )
+  }
+  if (printWarnings && format.includes('INITIALS') && !initials) {
+    console.log(
+      chalk.yellow('warn: Format requires initials but none were provided'),
+    )
+  }
 
-  // In the case when the format expects information that has not been
-  // provided(e.g. a ticket number), the branch name could end up with
-  // a straggling dividing character at the beginning or end which
-  // would always be undesirable.
-  //
-  // These conditionals strip off those extra characters if they exist.
-  remoteBranchName = remoteBranchName.replace(/^[^a-zA-Z0-9]+/, '')
-  remoteBranchName = remoteBranchName.replace(/[^a-zA-Z0-9]+$/, '')
-  return remoteBranchName
+  let branch = format
+  branch = replacePlaceholder(branch, 'TICKET', ticketNumber)
+  branch = replacePlaceholder(branch, 'BRANCH', localBranchName)
+  branch = replacePlaceholder(branch, 'INITIALS', initials)
+
+  return branch
+}
+
+function replacePlaceholder(branchName, placeholder, value) {
+  const nonAlphaNumeric = '[^a-zA-Z0-9]+'
+
+  return (
+    branchName
+      // Fill in the placeholder
+      // If the value for this placeholder has not been provided, then
+      // also remove any dividing (non alpha-numeric) characters that
+      // come after the placeholder to avoid a branch name with random
+      // dashes or slashes due to missing information.
+      .replace(
+        new RegExp(`${placeholder}(${nonAlphaNumeric})?`),
+        value ? value + '$1' : '',
+      )
+      // Remove any straggling dividers from the start
+      .replace(new RegExp('^' + nonAlphaNumeric), '')
+      // Remove any straggling dividers from the end
+      .replace(new RegExp(nonAlphaNumeric + '$'), '')
+  )
 }
 
 module.exports = createBranchName

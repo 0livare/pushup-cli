@@ -42,7 +42,7 @@ async function getConfig(cliOptions, commander) {
     const homeDirSearchResult = cosmicExplorer.search(os.homedir())
     homeConfig = homeDirSearchResult?.config
 
-    if (Object.keys(homeConfig).length) {
+    if (homeConfig && Object.keys(homeConfig).length) {
       console.log(chalk.gray(`Also using config from home directory as backup`))
     }
   }
