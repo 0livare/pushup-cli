@@ -7,6 +7,7 @@ execa.mockResolvedValue({stdout: 'myBranch'})
 const ticketInfo = {
   ticketPrefix: 'ZACH-',
   ticketId: '44',
+  initials: 'zp',
 }
 
 it('formats TICKET alone', async () => {
@@ -69,4 +70,17 @@ it('supports missing both ticket prefix and ticket ID', async () => {
   expect(await createBranchName({format: 'TICKET--BRANCH'})).toBe('myBranch')
   expect(await createBranchName({format: 'BRANCH'})).toBe('myBranch')
   expect(await createBranchName({format: 'TICKET'})).toBe('')
+})
+
+it('removes extra dividing characters when missing info', async () => {
+  const format = 'INITIALS/BRANCH-TICKET'
+
+  expect(await createBranchName({format, ticketId: '44'})).toBe('myBranch-44')
+  expect(await createBranchName({format, initials: 'zp'})).toBe('zp/myBranch')
+  expect(await createBranchName({format, initials: 'zp', ticketId: '44'})).toBe(
+    'zp/myBranch-44',
+  )
+  expect(await createBranchName({...ticketInfo, format})).toBe(
+    'zp/myBranch-ZACH-44',
+  )
 })
