@@ -16,7 +16,7 @@ To follow this standard, devs will often create a local branch in that format an
 
 - It's super repetitive
 - For some reason it's always harder than it should be to remember the damn format you're supposed to use
-- Your branch names become so long and a pain to type
+- Your branch names become long and a pain to type
 - Even terminal auto-complete can't help very much because the repetitive part of the branch name tends to be at the beginning, and for auto-complete to work you at least have to type it out until you get to a unique portion of the branch name.
 
 **pushup-cli** solves that problem by allowing you to create a short local branch name, and automatically publishing a remote branch name that meets your teams standards.
@@ -105,13 +105,13 @@ Your configuration file may contain the following keys:
 
 If you are using pushup but your team isn't, supporting multiple projects can prove difficult. The standard solution to support multiple projects is to create a config file that the entire team shares inside each repository. Because you need to add a config file to the repo though, that requires sign-off from your team.
 
-For situations where you don't have that team sign-off, you can create a config file in your home directory that contains a `projects` object. The keys of `projects` are file paths to projects, and the values are entire config objects, as described in [Config file contents](#config-file-contents) above.
+For situations where you don't have that team sign-off, you can create a config file in your home directory that contains a `projects` object. The keys of `projects` are file paths to projects, and the values are entire config objects, as described in [config file contents](#config-file-contents) above.
 
-See `.pushuprc SAMPLE.json` for an example.
+See [.pushuprc SAMPLE.json](https://github.com/zposten/pushup-cli/blob/main/.pushuprc%20SAMPLE.json) for an example.
 
 ## CLI Commands
 
-All CLI options also have an identically named config value. Please see the [config file contents](#config-file-contents) section for more information about each option.
+Many CLI options also have an identically named config value. Please see the [config file contents](#config-file-contents) section for more information about each option.
 
 ### `pushup [ticket]`, `pushup create [ticket]`
 
