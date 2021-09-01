@@ -3,15 +3,7 @@ const {getConfig, defaultOptions} = require('./config')
 jest.mock('cosmiconfig')
 const cosmiConfig = require('cosmiconfig')
 
-jest.mock('./util', () => {
-  const actualUtil = jest.requireActual('./util')
-
-  return {
-    ...actualUtil,
-    getCwd: jest.fn(),
-  }
-})
-const util = require('./util')
+process.cwd = jest.fn()
 
 jest.mock('os')
 const os = require('os')
@@ -41,7 +33,7 @@ const projectTestConfig = {
 }
 
 function mockConfigFile(config) {
-  cosmiConfig.cosmiconfigSync.mockReturnValueOnce({
+  cosmiConfig.cosmiconfigSync.mockReturnValue({
     search: () => ({config, filepath: 'mock'}),
   })
 }
@@ -87,7 +79,7 @@ it('overrides defaults with config', async () => {
 
 it('overrides config with projects', async () => {
   mockConfigFile(projectTestConfig)
-  util.getCwd.mockResolvedValue('/home/dev/project1')
+  process.cwd.mockReturnValue('/home/dev/project1')
 
   const result = await getConfig({})
   const configForProject = projectTestConfig.projects['/home/dev/project1']
@@ -102,7 +94,7 @@ it('maps "~" in a path to the user\'s home dir', async () => {
   mockConfigFile(projectTestConfig)
   // Note: "/home" here matches the value that was mocked
   // to the `os` module above.
-  util.getCwd.mockResolvedValueOnce('/home/dev/project2')
+  process.cwd.mockReturnValue('/home/dev/project2')
 
   const result = await getConfig({})
   const configForProject = projectTestConfig.projects['~/dev/project2']
@@ -115,7 +107,7 @@ it('maps "~" in a path to the user\'s home dir', async () => {
 
 it('resolves the correct project when cwd is a sub-directory', async () => {
   mockConfigFile(projectTestConfig)
-  util.getCwd.mockResolvedValueOnce('/home/dev/project1/foo/bar')
+  process.cwd.mockReturnValue('/home/dev/project1/foo/bar')
 
   const result = await getConfig({})
   const configForProject = projectTestConfig.projects['/home/dev/project1']
@@ -128,7 +120,7 @@ it('resolves the correct project when cwd is a sub-directory', async () => {
 
 it('falls back to other config values if project is not present', async () => {
   mockConfigFile(projectTestConfig)
-  util.getCwd.mockResolvedValueOnce('~/dev/other-project')
+  process.cwd.mockReturnValue('~/dev/other-project')
 
   const result = await getConfig({})
 
@@ -140,7 +132,7 @@ it('falls back to other config values if project is not present', async () => {
 
 it('overrides projects with CLI options', async () => {
   mockConfigFile(projectTestConfig)
-  util.getCwd.mockResolvedValueOnce('~/dev/project2')
+  process.cwd.mockReturnValue('~/dev/project2')
 
   const cliOptions = Object.entries(testConfig).reduce((accum, [key, val]) => {
     accum[key] = 'cli-' + val

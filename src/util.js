@@ -32,11 +32,6 @@ async function getGitRemotes(cwd) {
   }
 }
 
-async function getCwd() {
-  const {stdout: cwd} = await execa('pwd')
-  return cwd
-}
-
 async function getCurrentBranchName() {
   try {
     const {stdout: localBranchName} = await execa('git', [
@@ -89,7 +84,6 @@ module.exports = {
   warn,
   executeGitCommand,
   getGitRemotes,
-  getCwd,
   getCurrentBranchName,
   getCurrentRemoteTrackingBranch,
   ticketIdPrefixToNumber,

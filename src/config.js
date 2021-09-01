@@ -1,6 +1,6 @@
 const {cosmiconfigSync} = require('cosmiconfig')
 const chalk = require('chalk')
-const {getCwd, resolveHomePath} = require('./util')
+const {resolveHomePath} = require('./util')
 
 const defaultOptions = {
   ticketPrefix: '',
@@ -22,6 +22,7 @@ async function getConfig(cliOptions, commander) {
 
   const cosmicConfigSearchResult = cosmiconfigSync('pushup').search()
   if (!cosmicConfigSearchResult?.config) {
+    console.log(chalk.gray(`No config found`))
     return {...defaultOptions, ticketId: cliOptions.ticket, unknownOptions}
   }
 
@@ -40,9 +41,8 @@ async function getConfig(cliOptions, commander) {
     {},
   )
 
-  const cwd = await getCwd()
   const currentProjectPath = Object.keys(resolvedProjects).find(projectPath =>
-    cwd.includes(projectPath),
+    process.cwd().includes(projectPath),
   )
 
   return {
