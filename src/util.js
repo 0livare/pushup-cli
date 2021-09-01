@@ -40,9 +40,7 @@ async function getRemoteGitBranches() {
     // e.g. origin/foobar
     return rawRemoteBranches
       .split('\n')
-      .map(remoteBranch =>
-        remoteBranch.substring(remoteBranch.indexOf('/') + 1),
-      )
+      .map(remoteBranch => removeRemoteFromBranchName(remoteBranch))
   } catch (e) {
     return []
   }
@@ -71,10 +69,14 @@ async function getCurrentRemoteTrackingBranch() {
       '@{u}',
     ])
 
-    return remoteTrackingBranch.split('/')[1]
+    return removeRemoteFromBranchName(remoteTrackingBranch)
   } catch (e) {
     return null
   }
+}
+
+function removeRemoteFromBranchName(branchName) {
+  return branchName.substring(branchName.indexOf('/') + 1)
 }
 
 function ticketIdPrefixToNumber({ticketId, ticketPrefix}) {

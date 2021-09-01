@@ -147,3 +147,16 @@ it('suggests remote tracking branch and also created branch name', async () => {
   expect(result).toContain('zp-myBranch')
   expect(result).toContain('remoteTrackingBranch')
 })
+
+it("doesn't return duplicate branch names", async () => {
+  mockRemoteTrackingBranch('zp-myBranch')
+  mockRemoteBranches('zp-myBranch')
+  createBranchName.mockReturnValueOnce('zp-myBranch')
+
+  const result = await findBranchNames({
+    format: 'zp-BRANCH-TICKET',
+  })
+
+  expect(result).toHaveLength(1)
+  expect(result).toContain('zp-myBranch')
+})
