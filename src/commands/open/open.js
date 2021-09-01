@@ -6,11 +6,8 @@ const {error} = require('../../util')
 const findTicketNumbers = require('./find-ticket-numbers')
 
 async function open(ticketIdArg, options, commander) {
-  const {
-    ticketId: ticketIdOption,
-    ticketPrefix,
-    ticketUrl,
-  } = await getConfig(options, commander)
+  const config = await getConfig(options, commander)
+  const {ticketId: ticketIdOption, ticketUrl} = config
 
   if (!ticketUrl) {
     error(
@@ -25,10 +22,9 @@ async function open(ticketIdArg, options, commander) {
     process.exit(0)
   }
 
-  const ticketId = ticketIdOption ?? ticketIdArg
   const ticketNumbers = await findTicketNumbers({
-    ticketId,
-    ticketPrefix,
+    ...config,
+    ticketId: ticketIdOption ?? ticketIdArg,
   })
 
   if (!ticketNumbers || !ticketNumbers.length) {

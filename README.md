@@ -2,7 +2,7 @@
 
 Automatically push remote git branches that follow your team's standard.
 
-## Why
+## Why?
 
 Teams often create rules about the format of their branch names. The goal is usually to be able to identify who created the branch, or to be able to correlate the branch with a ticket number in your ticketing system (e.g. Jira). For example:
 
@@ -19,7 +19,7 @@ To follow this standard, devs will often create a local branch in that format an
 - Your branch names become so long and a pain to type
 - Even terminal auto-complete can't help very much because the repetitive part of the branch name tends to be at the beginning, and for auto-complete to work you at least have to type it out until you get to a unique portion of the branch name.
 
-**pushup-cli** solves that problem by allowing you to create a simple description branch name, and automatically publishing a remote branch name that meets your teams standards.
+**pushup-cli** solves that problem by allowing you to create a short local branch name, and automatically publishing a remote branch name that meets your teams standards.
 
 ## Getting Started
 
@@ -55,7 +55,9 @@ pushup uses [cosmiconfig](https://github.com/davidtheclark/cosmiconfig#cosmiconf
 
 You can place your config file directly in your project so that your whole team can take advantage of it, or in your home directory for your personal use.
 
-Placing the config directly in the project is nice because that allows customizing the ticket prefix on a per-project basis. You can also customize config values via the [CLI options](#CLI-Commands) each time you run a command.
+If configs are found both within the project and in your home directory, then both will be used, with precedence given to the project config.
+
+Placing a config directly in a project is nice because it allows customizing the ticket prefix on a per-project basis. You can also customize config values via the [CLI options](#CLI-Commands) each time you run a command. If your team is not using pushup but you need to support multiple projects, (after reminding your teammates they're wasting their valuable time) take a look at the [projects](#Projects) section below.
 
 ### Config file contents
 
@@ -67,13 +69,14 @@ Your configuration file may contain the following keys:
 
   - `TICKET`: Will be replaced with the parsed ticket number
   - `BRANCH`: Will be replaced with the name of your currently checked out local branch
+  - `INITIALS`: Will be replaced with the `initials` config value. This is useful for teams sharing the same `format`.
 
   Here are some example formats:
 
   ```
-  zp/BRANCH
+  INITIALS/BRANCH
   TICKET-BRANCH
-  zp-TICKET-BRANCH
+  foo-TICKET-BRANCH-bar
   ```
 
 - `ticketPrefix` _(default: `""`)_ - The prefix that appears at the beginning of all of your ticket numbers. This prefix is typically used to identify which project a particular ticket is associated with.
@@ -94,6 +97,10 @@ Your configuration file may contain the following keys:
   "ticketUrl": "https://company.atlassian.net/browse/TICKET"
   ```
 
+- `initials` _(default: `""`)_ - The initials of your name. If provided, this is used to fill the INITIALS placeholder in the `format` option.
+
+> Note: When using a project level config file, you can also create a config file in your home directory that contains your initials.
+
 ### Projects
 
 If you are using pushup but your team isn't, supporting multiple projects can prove difficult. The standard solution to support multiple projects is to create a config file that the entire team shares inside each repository. Because you need to add a config file to the repo though, that requires sign-off from your team.
@@ -106,7 +113,7 @@ See `.pushuprc SAMPLE.json` for an example.
 
 All CLI options also have an identically named config value. Please see the [config file contents](#config-file-contents) section for more information about each option.
 
-### `pushup create [ticket]`
+### `pushup [ticket]`, `pushup create [ticket]`
 
 > This is the default command, and is identical to just running `pushup [ticket]`.
 
@@ -116,10 +123,13 @@ As stated above, the simplest usage of the CLI is just `pushup 44`, where `44` i
 
 Supports the following options:
 
+- `--delete`, `-d`(Synonym for`pushup delete` command)
 - `--format`
-- `--ticketPrefix`, `-p`
 - `--gitRemote`, `-r`
+- `--help`
+- `--initials`, `-i`
 - `--ticket`, `-t` (identical to `[ticket]` argument)
+- `--ticketPrefix`, `-p`
 
 Any unknown options will be passed along to `git`.
 
@@ -130,9 +140,11 @@ Automatically delete the remote git branch corresponding to a particular ticket 
 Supports the following options:
 
 - `--format`
-- `--ticketPrefix`, `-p`
 - `--gitRemote`, `-r`
+- `--help`
+- `--initials`, `-i`
 - `--ticket`, `-t` (identical to `[ticket]` argument)
+- `--ticketPrefix`, `-p`
 
 Any unknown options will be passed along to `git`.
 
@@ -143,8 +155,10 @@ Create a pushup config file via interactive prompts.
 Supports the following options:
 
 - `--format`
-- `--ticketPrefix`, `-p`
 - `--gitRemote`, `-r`
+- `--help`
+- `--initials`, `-i`
+- `--ticketPrefix`, `-p`
 
 ### `pushup open [ticket]`
 
@@ -153,9 +167,11 @@ Open a ticket in your web browser. Requires a `ticketUrl` either in your config 
 Supports the following options:
 
 - `--format`
+- `--help`
+- `--initials`, `-i`
+- `--ticket`, `-t` (identical to `[ticket]` argument)
 - `--ticketPrefix`, `-p`
 - `--ticketUrl`, `-u`
-- `--ticket`, `-t` (identical to `[ticket]` argument)
 
 ## Running locally
 

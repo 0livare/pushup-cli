@@ -34,7 +34,10 @@
     "branch",
     "management",
     "remote",
+    "upstream",
+    "origin",
     "push",
+    "up",
     "team",
     "standard",
     "standards",
@@ -42,6 +45,7 @@
     "jira",
     "ticket",
     "number",
-    "automatic"
+    "automatic",
+    "pattern"
   ]
 }

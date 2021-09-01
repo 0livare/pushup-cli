@@ -1,12 +1,15 @@
 const {getCurrentBranchName, ticketIdPrefixToNumber} = require('../../util')
 
-async function createBranchName({ticketId, format, ticketPrefix}) {
+async function createBranchName(config) {
+  const {ticketId, format, ticketPrefix, initials} = config
+
   const ticketNumber = ticketIdPrefixToNumber({ticketId, ticketPrefix})
   const localBranchName = await getCurrentBranchName()
 
   let remoteBranchName = format
     .replace('TICKET', ticketNumber || '')
     .replace('BRANCH', localBranchName || '')
+    .replace('INITIALS', initials || '')
 
   // In the case when the format expects information that has not been
   // provided(e.g. a ticket number), the branch name could end up with

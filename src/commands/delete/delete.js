@@ -1,25 +1,16 @@
 const chalk = require('chalk')
 const inquirer = require('inquirer')
 const createGitArgs = require('./create-git-args')
-const {executeGitCommand, error} = require('../../util')
+const {executeGitCommand} = require('../../util')
 const {getConfig} = require('../../config')
 
 async function deleteBranch(ticketIdArg, options, commander) {
-  const {
-    ticketId: ticketIdOption,
-    format,
-    ticketPrefix,
-    gitRemote,
-    unknownOptions,
-  } = await getConfig(options, commander)
-
-  const ticketId = ticketIdOption ?? ticketIdArg
+  const config = await getConfig(options, commander)
+  const {ticketId: ticketIdOption, unknownOptions} = config
 
   const gitArgs = await createGitArgs({
-    ticketId,
-    format,
-    ticketPrefix,
-    gitRemote,
+    ...config,
+    ticketId: ticketIdOption ?? ticketIdArg,
   })
 
   const {confirmation} = await inquirer.prompt([

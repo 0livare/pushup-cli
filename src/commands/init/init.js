@@ -2,7 +2,7 @@ const path = require('path')
 const fs = require('fs')
 const chalk = require('chalk')
 const emoji = require('node-emoji')
-const {error, getCwd} = require('../../util')
+const {error} = require('../../util')
 
 const checkForExistingConfig = require('./check-for-existing-config')
 const removeEmptyConfigValues = require('./remove-empty-config-values')
@@ -10,16 +10,13 @@ const {promptUser} = require('./prompt-user')
 
 async function init(options) {
   await checkForExistingConfig()
-  const cwd = await getCwd()
 
-  const {fileLocation, format, ticketPrefix, gitRemote, ticketUrl, projects} =
-    await promptUser({cwd, options})
+  const userAnswers = await promptUser({cwd: process.cwd(), options})
+  const {fileLocation, projects} = userAnswers
 
   const finalConfigValues = {
-    format: options.format || format,
-    ticketPrefix: options.ticketPrefix || ticketPrefix,
-    gitRemote: options.gitRemote || gitRemote,
-    ticketUrl: options.ticketUrl || ticketUrl,
+    ...userAnswers,
+    ...options,
     projects,
   }
 

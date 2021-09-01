@@ -1,12 +1,14 @@
 const os = require('os')
 const {cosmiconfigSync} = require('cosmiconfig')
-const {getCwd, resolveHomePath} = require('./util')
+const chalk = require('chalk')
+const {resolveHomePath} = require('./util')
 
 const defaultOptions = {
   ticketPrefix: '',
   gitRemote: 'origin',
   format: 'TICKET-BRANCH',
   ticketUrl: '',
+  initials: '',
 }
 
 /**
@@ -19,12 +21,34 @@ async function getConfig(cliOptions, commander) {
   // as options
   const unknownOptions = commander?.args.filter(arg => arg.startsWith('-'))
 
-  const cosmicConfigSearchResult = cosmiconfigSync('pushup').search()
-  if (!cosmicConfigSearchResult) return {...defaultOptions, unknownOptions}
+  const cosmicExplorer = cosmiconfigSync('pushup')
+  const cosmicConfigSearchResult = cosmicExplorer.search()
 
-  const {config} = cosmicConfigSearchResult
+  if (!cosmicConfigSearchResult?.config) {
+    console.log(chalk.gray(`No config found`))
+    return {...defaultOptions, ticketId: cliOptions.ticket, unknownOptions}
+  }
 
-  const projects = Object.entries(config?.projects ?? {}).reduce(
+  console.log(
+    chalk.gray(`Using config from ${cosmicConfigSearchResult.filepath}`),
+  )
+
+  const {projects, ...configFile} = cosmicConfigSearchResult.config
+
+  // If a project specific config was found, also search for a config
+  // in the home directory to fill in missing values (like initials)
+  let homeConfig = {}
+  if (cosmicConfigSearchResult.filepath !== os.homedir()) {
+    const homeDirSearchResult = cosmicExplorer.search(os.homedir())
+    homeConfig = homeDirSearchResult?.config
+
+    if (Object.keys(homeConfig).length) {
+      console.log(chalk.gray(`Also using config from home directory as backup`))
+    }
+  }
+
+  // Resolve "~" in paths for all projects
+  const resolvedProjects = Object.entries(projects ?? {}).reduce(
     (accum, [projectPath, config]) => {
       accum[resolveHomePath(projectPath)] = config
       return accum
@@ -32,15 +56,15 @@ async function getConfig(cliOptions, commander) {
     {},
   )
 
-  const cwd = await getCwd()
-  const currentProjectPath = Object.keys(projects).find(projectPath =>
-    cwd.includes(projectPath),
+  const currentProjectPath = Object.keys(resolvedProjects).find(projectPath =>
+    process.cwd().includes(projectPath),
   )
 
   return {
     ...defaultOptions,
-    ...(config ?? {}),
-    ...(projects[currentProjectPath] ?? {}),
+    ...homeConfig,
+    ...(configFile ?? {}),
+    ...(resolvedProjects[currentProjectPath] ?? {}),
     ...cliOptions,
     ticketId: cliOptions.ticket,
     unknownOptions,
