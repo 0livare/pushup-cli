@@ -1,0 +1,5 @@
+{
+  "format": "INITIALS/TICKET-BRANCH",
+  "ticketUrl": "https://github.com/zposten/pushup-cli/issues/TICKET",
+  "gitRemote": "origin"
+}
