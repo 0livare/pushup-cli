@@ -1,3 +1,4 @@
+const chalk = require('chalk')
 const {getCurrentBranchName, ticketIdPrefixToNumber} = require('../../util')
 
 async function createBranchName(config) {
@@ -5,6 +6,19 @@ async function createBranchName(config) {
 
   const ticketNumber = ticketIdPrefixToNumber({ticketId, ticketPrefix})
   const localBranchName = await getCurrentBranchName()
+
+  if (format.includes('TICKET') && !ticketNumber) {
+    console.log(
+      chalk.yellow(
+        'warn: Format requires ticket number but one was not provided',
+      ),
+    )
+  }
+  if (format.includes('INITIALS') && !initials) {
+    console.log(
+      chalk.yellow('warn: Format requires initials but none were provided'),
+    )
+  }
 
   let remoteBranchName = format
     .replace('TICKET', ticketNumber || '')
