@@ -1,6 +1,7 @@
 const emoji = require('node-emoji')
 const execa = require('execa')
 const chalk = require('chalk')
+const os = require('os')
 
 function error(string) {
   const x = emoji.get('x')
@@ -20,13 +21,33 @@ async function executeGitCommand(gitArgs) {
   }
 }
 
-async function getCurrentBranchName() {
-  const {stdout: localBranchName} = await execa('git', [
-    'branch',
-    '--show-current',
-  ])
+async function getGitRemotes(cwd) {
+  try {
+    const {stdout: gitRemotesRaw} = await execa('git', ['remote'], {
+      cwd: resolveHomePath(cwd),
+    })
+    return gitRemotesRaw.split('\n')
+  } catch (e) {
+    return []
+  }
+}
 
-  return localBranchName
+async function getCwd() {
+  const {stdout: cwd} = await execa('pwd')
+  return cwd
+}
+
+async function getCurrentBranchName() {
+  try {
+    const {stdout: localBranchName} = await execa('git', [
+      'branch',
+      '--show-current',
+    ])
+    return localBranchName
+  } catch (e) {
+    error(e)
+    process.exit(1)
+  }
 }
 
 async function getCurrentRemoteTrackingBranch() {
@@ -55,11 +76,22 @@ function ticketIdPrefixToNumber({ticketId, ticketPrefix}) {
     : ''
 }
 
+/**
+ * Remove "~" from path strings by replacing it with the
+ * path to the user's home directory
+ */
+function resolveHomePath(pathWithTilde) {
+  return pathWithTilde.replace('~', os.homedir())
+}
+
 module.exports = {
   error,
   warn,
   executeGitCommand,
+  getGitRemotes,
+  getCwd,
   getCurrentBranchName,
   getCurrentRemoteTrackingBranch,
   ticketIdPrefixToNumber,
+  resolveHomePath,
 }

@@ -94,6 +94,14 @@ Your configuration file may contain the following keys:
   "ticketUrl": "https://company.atlassian.net/browse/TICKET"
   ```
 
+### Projects
+
+If you are using pushup but your team isn't, supporting multiple projects can prove difficult. The standard solution to support multiple projects is to create a config file that the entire team shares inside each repository. Because you need to add a config file to the repo though, that requires sign-off from your team.
+
+For situations where you don't have that team sign-off, you can create a config file in your home directory that contains a `projects` object. The keys of `projects` are file paths to projects, and the values are entire config objects, as described in [Config file contents](#config-file-contents) above.
+
+See `.pushuprc SAMPLE.json` for an example.
+
 ## CLI Commands
 
 All CLI options also have an identically named config value. Please see the [config file contents](#config-file-contents) section for more information about each option.

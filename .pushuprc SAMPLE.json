@@ -2,5 +2,21 @@
   "format": "TICKET-zp-BRANCH",
   "ticketPrefix": "ZACH-",
   "gitRemote": "origin",
-  "ticketUrl": "https://company.atlassian.net/browse/TICKET"
+  "ticketUrl": "https://zach.atlassian.net/browse/TICKET",
+  "projects": [
+    {
+      "projectPath": "~/dev/project-1",
+      "format": "TICKET-foo-BRANCH",
+      "ticketPrefix": "FOO-",
+      "gitRemote": "origin",
+      "ticketUrl": "https://foocompany.atlassian.net/browse/TICKET"
+    },
+    {
+      "projectPath": "~/dev/project-1",
+      "ticketPrefix": "BAR-",
+      "gitRemote": "upstream",
+      "format": "TICKET-BRANCH-bar",
+      "ticketUrl": "https://barcompany.atlassian.net/browse/TICKET"
+    }
+  ]
 }
