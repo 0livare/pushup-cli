@@ -2,6 +2,8 @@ const {getConfig, defaultOptions} = require('./config')
 
 jest.mock('cosmiconfig')
 const cosmiConfig = require('cosmiconfig')
+const search = jest.fn()
+cosmiConfig.cosmiconfigSync.mockReturnValue({search})
 
 process.cwd = jest.fn()
 
@@ -33,9 +35,7 @@ const projectTestConfig = {
 }
 
 function mockConfigFile(config) {
-  cosmiConfig.cosmiconfigSync.mockReturnValue({
-    search: () => ({config, filepath: 'mock'}),
-  })
+  search.mockReturnValueOnce({config, filepath: 'mock'})
 }
 
 function expectConfigsToMatch({expected, result}) {
@@ -153,4 +153,30 @@ it('passes through unknown CLI options', async () => {
 
   expect(result.unknownOptions).toContain('-f')
   expect(result.unknownOptions).toContain('--zach')
+})
+
+it('fetches backup values from home config when project config is present', async () => {
+  const testConfigNoInitials = {...testConfig}
+  delete testConfigNoInitials.initials
+
+  search.mockClear()
+  mockConfigFile(testConfigNoInitials) // Project config
+  mockConfigFile({initials: testConfig.initials}) // Home config
+
+  const result = await getConfig({})
+
+  expect(search).toHaveBeenCalledTimes(2)
+  expect(result.initials).toBe(testConfig.initials)
+})
+
+it('overrides home config values with project config values when both are present', async () => {
+  mockConfigFile(testConfig) // Project config
+  mockConfigFile(prefixObjectValues(testConfig, 'home-')) // Home config
+
+  const result = await getConfig({})
+
+  expectConfigsToMatch({
+    result,
+    expected: testConfig,
+  })
 })

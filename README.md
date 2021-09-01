@@ -55,7 +55,9 @@ pushup uses [cosmiconfig](https://github.com/davidtheclark/cosmiconfig#cosmiconf
 
 You can place your config file directly in your project so that your whole team can take advantage of it, or in your home directory for your personal use.
 
-Placing the config directly in the project is nice because that allows customizing the ticket prefix on a per-project basis. You can also customize config values via the [CLI options](#CLI-Commands) each time you run a command. If your team's not using pushup but you need to support multiple projects, (after reminding them they're wasting their valuable time) take a look at the [projects](#Projects) section below.
+If configs are found both within the project and in your home directory, then both will be used, with precedence given to the project config.
+
+Placing a config directly in a project is nice because it allows customizing the ticket prefix on a per-project basis. You can also customize config values via the [CLI options](#CLI-Commands) each time you run a command. If your team is not using pushup but you need to support multiple projects, (after reminding your teammates they're wasting their valuable time) take a look at the [projects](#Projects) section below.
 
 ### Config file contents
 
@@ -96,6 +98,8 @@ Your configuration file may contain the following keys:
   ```
 
 - `initials` _(default: `""`)_ - The initials of your name. If provided, this is used to fill the INITIALS placeholder in the `format` option.
+
+> Note: When using a project level config file, you can also create a config file in your home directory that contains your initials.
 
 ### Projects
 

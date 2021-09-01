@@ -1,3 +1,4 @@
+const os = require('os')
 const {cosmiconfigSync} = require('cosmiconfig')
 const chalk = require('chalk')
 const {resolveHomePath} = require('./util')
@@ -20,7 +21,9 @@ async function getConfig(cliOptions, commander) {
   // as options
   const unknownOptions = commander?.args.filter(arg => arg.startsWith('-'))
 
-  const cosmicConfigSearchResult = cosmiconfigSync('pushup').search()
+  const cosmicExplorer = cosmiconfigSync('pushup')
+  const cosmicConfigSearchResult = cosmicExplorer.search()
+
   if (!cosmicConfigSearchResult?.config) {
     console.log(chalk.gray(`No config found`))
     return {...defaultOptions, ticketId: cliOptions.ticket, unknownOptions}
@@ -31,6 +34,18 @@ async function getConfig(cliOptions, commander) {
   )
 
   const {projects, ...configFile} = cosmicConfigSearchResult.config
+
+  // If a project specific config was found, also search for a config
+  // in the home directory to fill in missing values (like initials)
+  let homeConfig = {}
+  if (cosmicConfigSearchResult.filepath !== os.homedir()) {
+    const homeDirSearchResult = cosmicExplorer.search(os.homedir())
+    homeConfig = homeDirSearchResult?.config
+
+    if (Object.keys(homeConfig).length) {
+      console.log(chalk.gray(`Also using config from home directory as backup`))
+    }
+  }
 
   // Resolve "~" in paths for all projects
   const resolvedProjects = Object.entries(projects ?? {}).reduce(
@@ -47,6 +62,7 @@ async function getConfig(cliOptions, commander) {
 
   return {
     ...defaultOptions,
+    ...homeConfig,
     ...(configFile ?? {}),
     ...(resolvedProjects[currentProjectPath] ?? {}),
     ...cliOptions,
