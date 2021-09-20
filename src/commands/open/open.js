@@ -5,9 +5,11 @@ const {getConfig} = require('../../config')
 const {error} = require('../../util')
 const findTicketNumbers = require('./find-ticket-numbers')
 
-async function open(ticketIdArg, options, commander) {
+async function open(firstTicketIdArg, options, commander) {
   const config = await getConfig(options, commander)
   const {ticketId: ticketIdOption, ticketUrl} = config
+
+  const allTicketIds = [...commander.args, ticketIdOption].filter(x => x)
 
   if (!ticketUrl) {
     error(
@@ -22,38 +24,39 @@ async function open(ticketIdArg, options, commander) {
     process.exit(0)
   }
 
-  const ticketNumbers = await findTicketNumbers({
-    ...config,
-    ticketId: ticketIdOption ?? ticketIdArg,
-  })
+  for (const ticketId of allTicketIds) {
+    const ticketNumbers = await findTicketNumbers({
+      ...config,
+      ticketId: ticketIdOption ?? ticketId,
+    })
 
-  if (!ticketNumbers || !ticketNumbers.length) {
-    error('Could not determine ticket number')
-    process.exit(0)
-  }
-
-  let ticketsToOpen = ticketNumbers
-
-  if (ticketNumbers.length > 1) {
-    const {choseTicketNumber} = await inquirer.prompt([
-      {
-        name: 'choseTicketNumber',
-        type: 'list',
-        message:
-          'Multiple possible ticket numbers were found, which would you like to open?',
-        choices: [...ticketNumbers, 'all'],
-      },
-    ])
-
-    if (choseTicketNumber !== 'all') {
-      ticketsToOpen = [choseTicketNumber]
+    if (!ticketNumbers || !ticketNumbers.length) {
+      error(`Could not determine ticket number for ${ticketId}`)
     }
-  }
 
-  for (let ticketToOpen of ticketsToOpen) {
-    console.log(chalk.gray(`Opening ticket ${ticketToOpen}`))
-    const url = ticketUrl.replace('TICKET', ticketToOpen)
-    openUrl(url)
+    let ticketsToOpen = ticketNumbers
+
+    if (ticketNumbers.length > 1) {
+      const {choseTicketNumber} = await inquirer.prompt([
+        {
+          name: 'choseTicketNumber',
+          type: 'list',
+          message:
+            'Multiple possible ticket numbers were found, which would you like to open?',
+          choices: [...ticketNumbers, 'all'],
+        },
+      ])
+
+      if (choseTicketNumber !== 'all') {
+        ticketsToOpen = [choseTicketNumber]
+      }
+    }
+
+    for (let ticketToOpen of ticketsToOpen) {
+      console.log(chalk.gray(`Opening ticket ${ticketToOpen}`))
+      const url = ticketUrl.replace('TICKET', ticketToOpen)
+      openUrl(url)
+    }
   }
 }
 
