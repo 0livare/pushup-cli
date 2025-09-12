@@ -3,7 +3,7 @@
   "ticketPrefix": "ZACH-",
   "gitRemote": "origin",
   "ticketUrl": "https://zach.atlassian.net/browse/TICKET",
-  "initials": "zp",
+  "initials": "zo",
   "projects": [
     {
       "projectPath": "~/dev/project-1",

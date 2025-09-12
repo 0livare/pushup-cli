@@ -7,9 +7,9 @@ Automatically push remote git branches that follow your team's standard.
 Teams often create rules about the format of their branch names. The goal is usually to be able to identify who created the branch, or to be able to correlate the branch with a ticket number in your ticketing system (e.g. Jira). For example:
 
 ```bash
-zp/my-branch # Where zp are someone's initials
+zo/my-branch # Where zo are someone's initials
 MLD-419-add-graphql-support # Where MLD-419 is a ticket number
-zp-NVM-8907-supportAdditionalProviders
+zo-NVM-8907-supportAdditionalProviders
 ```
 
 To follow this standard, devs will often create a local branch in that format and then just push it up like normal. But as you've probably found (if you've made your way here), that method has some drawbacks:
@@ -38,11 +38,11 @@ To follow this standard, devs will often create a local branch in that format an
 3. Now, pushing a remote branch is as simple as
 
    ```bash
-   ➜  git checkout -b myBranch
+   ➜  git switch -c myBranch
    Switched to a new branch 'myBranch'
 
    ➜  pushup 123 # Where 123 is your ticket number
-   Branch 'myBranch' set up to track remote branch 'zp-NVM-123-myBranch' from 'origin'.
+   Branch 'myBranch' set up to track remote branch 'zo-NVM-123-myBranch' from 'origin'.
    ```
 
 ## Configuration File
@@ -107,7 +107,7 @@ If you are using pushup but your team isn't, supporting multiple projects can pr
 
 For situations where you don't have that team sign-off, you can create a config file in your home directory that contains a `projects` object. The keys of `projects` are file paths to projects, and the values are entire config objects, as described in [config file contents](#config-file-contents) above.
 
-See [.pushuprc SAMPLE.json](https://github.com/zposten/pushup-cli/blob/main/.pushuprc%20SAMPLE.json) for an example.
+See [.pushuprc SAMPLE.json](https://github.com/0livare/pushup-cli/blob/main/.pushuprc%20SAMPLE.json) for an example.
 
 ## CLI Commands
 

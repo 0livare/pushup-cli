@@ -2,9 +2,9 @@
   "name": "pushup-cli",
   "version": "0.0.10",
   "description": "Automatically push remote git branches that follow your team's standard.",
-  "author": "Zach Posten <https://github.com/zposten>",
+  "author": "Zach Olivare <https://github.com/0livare>",
   "license": "MIT",
-  "repository": "https://github.com/zposten/pushup-cli",
+  "repository": "https://github.com/0livare/pushup-cli",
   "private": false,
   "files": [
     "src/**/*.js"
